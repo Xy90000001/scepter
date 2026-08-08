@@ -7,15 +7,18 @@ Obsidian (phone/desktop), Hermes, and any text editor.
 
 | Path | What lives here |
 |---|---|
-| `Brain/` | Your notes, journal, ideas, research — the actual second brain |
-| `Hermes/Memory/` | Hermes's persistent memory (`MEMORY.md`, `USER.md`) — canonical interchange; on PC `~/.hermes/memories` symlinks here, on Android it's synced here by the backup job |
-| `Hermes/Sessions/` | Exported conversation digests (all) + full transcripts (recent) |
-| `Hermes/SOUL.md` | Hermes persona |
-| `scripts/` | Export tooling (session DB → markdown) |
+| `00_Inbox/` | Capture everything — sorted later |
+| `01_Tasks/` | Task board (`kanban.md`) |
+| `02_Projects/` | Music, Ecom, saas, Coding |
+| `03_Outreach/` | Lead tracking & templates |
+| `Brain/` | Knowledge base, journal, ideas — the actual second brain |
+| `Hermes/` | Agent layer: `Memory/`, `Sessions/`, `SOUL.md`, `Config/` |
+| `scripts/` | Sync/export tooling (portable, versioned) |
+| `AGENTS.md` | Workspace conventions (auto-loaded by agents) |
 
 ## Sync
 
-- **Termux/this device:** scheduled cron job exports sessions and commits/pushes.
+- **Termux (this device):** `cronie` runs `scripts/vault_sync.sh` every 15 min — pull → session export → memory sync → commit → push.
 - **Phone (Obsidian):** `obsidian-git` plugin auto-pulls/pushes (isomorphic-git, no extra app).
 - **PC:** clone repo, point Obsidian at it, install Hermes — see `SETUP.md`.
 

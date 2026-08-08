@@ -69,15 +69,15 @@ adapt, never assume it's current.
 
 | Trigger | What runs |
 |---|---|
-| Every 6h (Termux cron `scepter-backup`) | Session export → `git commit` → `git push` |
-| Obsidian Git (phone/PC) | Pull on startup, push on save — keeps `Brain/` + memory in sync |
-| Manual | `bash ~/storage/shared/scepter/scripts/backup.sh` (or on PC: `~/scepter/scripts/backup.sh`) |
+| Every 15 min (cronie `crond` on Termux) | `scripts/vault_sync.sh`: pull --rebase → session export → memory sync → STRUCTURE.md → commit → push |
+| Obsidian Git (phone/PC) | Pull on startup, push on save — keeps `00–04`, `Brain/` + memory in sync |
+| Manual | `bash ~/storage/shared/scepter/scripts/vault_sync.sh` (Termux) or `~/scepter/scripts/vault_sync.sh` (PC) |
 
 **Memory lives in the vault.** How the live files get there differs by platform:
 - **PC (symlink):** `~/.hermes/memories` → `~/scepter/Hermes/Memory` — Hermes writes straight into the repo.
 - **Android (sync):** live files stay in `~/.hermes/memories` because Android shared
-  storage can't `flock` (FUSE limitation) — the `scepter-backup` cron copies them
-  into `Hermes/Memory/` every 6h. Don't hand-edit `Hermes/Memory/` on Android; edits
+  storage can't `flock` (FUSE limitation) — `vault_sync.sh` copies them
+  into `Hermes/Memory/` every 15 min. Don't hand-edit `Hermes/Memory/` on Android; edits
   on PC sync down fine.
 
 ---
