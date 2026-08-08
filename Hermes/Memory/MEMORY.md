@@ -1,0 +1,3 @@
+Hermes on this device runs on Android/Termux with a custom provider: local OpenAI-compatible proxy at http://localhost:20128/v1 (owned_by "combo") that resolves the auto/* model aliases (best-coding, pro-*, etc.); the proxy maps alias → upstream model, not Hermes source. Hermes data lives in ~/.hermes (memories/, state.db, config.yaml).
+§
+User runs a persistent Hermes gateway on this device (Telegram DM); runtime state/traffic live in ~/.hermes (gateway_state.json, channel_directory.json, logs/gateway.log).
