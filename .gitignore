@@ -5,6 +5,7 @@ Thumbs.db
 # ── Obsidian device-local state (plugin CONFIGS stay tracked) ──
 .obsidian/workspace*.json
 .obsidian/cache/
+.obsidian/plugins/obsidian-git/data.json
 
 # ── Secrets — never, ever commit these ────────────────────
 *.env
