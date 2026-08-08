@@ -24,3 +24,6 @@ auth.json
 
 # ── Termux/Android noise ───────────────────────────────────
 .nomedia
+
+# Lock files
+*.lock
