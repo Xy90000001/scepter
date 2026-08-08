@@ -2,4 +2,4 @@ Hermes on this device runs on Android/Termux with a custom provider: local OpenA
 §
 User runs a persistent Hermes gateway on this device (Telegram DM); runtime state/traffic live in ~/.hermes (gateway_state.json, channel_directory.json, logs/gateway.log).
 §
-Second-brain vault "scepter": ~/storage/shared/scepter (Android shared storage), private GitHub repo Xy90000001/scepter. Memory stays in ~/.hermes/memories (FUSE can't flock); cron job scepter-backup syncs it + session exports to the vault every 6h.
+Second-brain vault "scepter": ~/storage/shared/scepter (Android shared storage), private GitHub repo Xy90000001/scepter. Memory stays in ~/.hermes/memories (FUSE can't flock); cronie runs scripts/vault_sync.sh every 15 min (pull --rebase → session export → memory sync → commit → push). Hermes cron scepter-backup is paused as fallback.
