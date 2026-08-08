@@ -1,0 +1,26 @@
+# ── OS cruft ──────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Obsidian device-local state (plugin CONFIGS stay tracked) ──
+.obsidian/workspace*.json
+.obsidian/cache/
+
+# ── Secrets — never, ever commit these ────────────────────
+*.env
+.env*
+auth.json
+*.token
+*.pem
+*id_rsa*
+*id_ed25519*
+
+# ── Raw session DBs / dumps (only markdown digests travel) ──
+*.db
+*.db-*
+*.sqlite*
+*.jsonl
+*.jsonl.gz
+
+# ── Termux/Android noise ───────────────────────────────────
+.nomedia
