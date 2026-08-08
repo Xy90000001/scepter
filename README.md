@@ -8,7 +8,7 @@ Obsidian (phone/desktop), Hermes, and any text editor.
 | Path | What lives here |
 |---|---|
 | `Brain/` | Your notes, journal, ideas, research — the actual second brain |
-| `Hermes/Memory/` | Hermes's persistent memory (`MEMORY.md`, `USER.md`) — **source of truth**, symlinked from `~/.hermes/memories` |
+| `Hermes/Memory/` | Hermes's persistent memory (`MEMORY.md`, `USER.md`) — canonical interchange; on PC `~/.hermes/memories` symlinks here, on Android it's synced here by the backup job |
 | `Hermes/Sessions/` | Exported conversation digests (all) + full transcripts (recent) |
 | `Hermes/SOUL.md` | Hermes persona |
 | `scripts/` | Export tooling (session DB → markdown) |
@@ -23,4 +23,7 @@ Obsidian (phone/desktop), Hermes, and any text editor.
 
 - Private repo. Markdown only — secrets and raw DBs are gitignored.
 - One note per session in `Hermes/Sessions/`, newest at the top of the index.
-- Memory edits are safe from anywhere: the vault is canonical, devices just sync.
+- **Memory on Android:** live files stay in `~/.hermes/memories` (shared storage
+  can't flock them); the backup job syncs them into `Hermes/Memory/`. **On PC**
+  the folder is symlinked directly. Don't edit `Hermes/Memory/` on Android —
+  the next sync overwrites it.

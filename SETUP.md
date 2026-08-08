@@ -73,8 +73,12 @@ adapt, never assume it's current.
 | Obsidian Git (phone/PC) | Pull on startup, push on save — keeps `Brain/` + memory in sync |
 | Manual | `bash ~/storage/shared/scepter/scripts/backup.sh` (or on PC: `~/scepter/scripts/backup.sh`) |
 
-**Memory is canonical in the vault.** Edit `USER.md` / `MEMORY.md` from any device;
-Hermes reads them because `~/.hermes/memories` is a symlink.
+**Memory lives in the vault.** How the live files get there differs by platform:
+- **PC (symlink):** `~/.hermes/memories` → `~/scepter/Hermes/Memory` — Hermes writes straight into the repo.
+- **Android (sync):** live files stay in `~/.hermes/memories` because Android shared
+  storage can't `flock` (FUSE limitation) — the `scepter-backup` cron copies them
+  into `Hermes/Memory/` every 6h. Don't hand-edit `Hermes/Memory/` on Android; edits
+  on PC sync down fine.
 
 ---
 
