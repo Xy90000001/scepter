@@ -13,5 +13,6 @@ All sessions with Hermes, newest first. Full transcripts are available for recen
 | 2026-08-06 | [[2026-08-06_0349_20260806|Endpoint Test Results]] | **transcript** |
 | 2026-08-06 | [[2026-08-06_0655_20260806|Untitled session]] | **transcript** |
 | 2026-08-08 | [[2026-08-08_0534_20260808|Checking for Background Tasks]] | **transcript** |
+| 2026-08-08 | [[2026-08-08_1415_20260808|Untitled session]] | **transcript** |
 
 _Generated automatically — do not edit by hand._
