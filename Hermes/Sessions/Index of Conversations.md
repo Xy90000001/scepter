@@ -15,5 +15,6 @@ All sessions with Hermes, newest first. Full transcripts are available for recen
 | 2026-08-08 | [[2026-08-08_0534_20260808|Checking for Background Tasks]] | **transcript** |
 | 2026-08-08 | [[2026-08-08_1415_20260808|Untitled session]] | **transcript** |
 | 2026-08-08 | [[2026-08-08_1451_20260808|Termux Background Process Check]] | **transcript** |
+| 2026-08-09 | [[2026-08-09_0510_20260809|Scepter as Termux Working Directory]] | **transcript** |
 
 _Generated automatically — do not edit by hand._
