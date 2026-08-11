@@ -25,3 +25,7 @@
 
   [2m  Press Ctrl+C to stop[0m
   
+✗ Another gateway instance is already running (PID 22085).
+  Use 'hermes gateway restart' to replace it,
+  or 'hermes gateway stop' first.
+  Or use 'hermes gateway run --replace' to auto-replace.
