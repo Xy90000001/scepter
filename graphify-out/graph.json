@@ -1,0 +1,701 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "fetch_messages()",
+      "file_type": "code",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L74",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "fetch_messages()",
+      "id": "scripts_export_sessions_fetch_messages",
+      "community_name": "export_sessions.py"
+    },
+    {
+      "label": "fetch_sessions()",
+      "file_type": "code",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L58",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "fetch_sessions()",
+      "id": "scripts_export_sessions_fetch_sessions",
+      "community_name": "export_sessions.py"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L190",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "main()",
+      "id": "scripts_export_sessions_main",
+      "community_name": "export_sessions.py"
+    },
+    {
+      "label": "render_digest()",
+      "file_type": "code",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L99",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "render_digest()",
+      "id": "scripts_export_sessions_render_digest",
+      "community_name": "export_sessions.py"
+    },
+    {
+      "label": "render_index()",
+      "file_type": "code",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L167",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "render_index()",
+      "id": "scripts_export_sessions_render_index",
+      "community_name": "export_sessions.py"
+    },
+    {
+      "label": "safe_title()",
+      "file_type": "code",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L40",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "safe_title()",
+      "id": "scripts_export_sessions_safe_title",
+      "community_name": "export_sessions.py"
+    },
+    {
+      "label": "session_filename()",
+      "file_type": "code",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L88",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "session_filename()",
+      "id": "scripts_export_sessions_session_filename",
+      "community_name": "export_sessions.py"
+    },
+    {
+      "label": "truncate()",
+      "file_type": "code",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L44",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "truncate()",
+      "id": "scripts_export_sessions_truncate",
+      "community_name": "export_sessions.py"
+    },
+    {
+      "label": "fmt_content()",
+      "file_type": "code",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L51",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "fmt_content()",
+      "id": "scripts_export_sessions_fmt_content",
+      "community_name": "render_transcript"
+    },
+    {
+      "label": "render_transcript()",
+      "file_type": "code",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L149",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "render_transcript()",
+      "id": "scripts_export_sessions_render_transcript",
+      "community_name": "render_transcript"
+    },
+    {
+      "label": "ts_to_str()",
+      "file_type": "code",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L27",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "ts_to_str()",
+      "id": "scripts_export_sessions_ts_to_str",
+      "community_name": "render_transcript"
+    },
+    {
+      "label": "export_sessions.py",
+      "file_type": "code",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "export_sessions.py",
+      "id": "scripts_export_sessions",
+      "community_name": "export_sessions.py"
+    },
+    {
+      "label": "SQLite timestamps: unix epoch (int/float) or ISO string \u2192 readable.",
+      "file_type": "rationale",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L28",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "sqlite timestamps: unix epoch (int/float) or iso string \u2192 readable.",
+      "id": "scripts_export_sessions_rationale_28",
+      "community_name": "render_transcript"
+    },
+    {
+      "label": "Keep code blocks; strip terminal escape noise.",
+      "file_type": "rationale",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L52",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "keep code blocks; strip terminal escape noise.",
+      "id": "scripts_export_sessions_rationale_52",
+      "community_name": "render_transcript"
+    },
+    {
+      "label": "vault_watch.sh",
+      "file_type": "code",
+      "source_file": "scripts/vault_watch.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "vault_watch.sh",
+      "id": "scripts_vault_watch",
+      "community_name": "vault_watch.sh"
+    },
+    {
+      "label": "log()",
+      "file_type": "code",
+      "source_file": "scripts/vault_watch.sh",
+      "source_location": "L28",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "log()",
+      "id": "scripts_vault_watch_log",
+      "community_name": "vault_watch.sh"
+    },
+    {
+      "label": "vault_watch.sh script",
+      "file_type": "code",
+      "source_file": "scripts/vault_watch.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "vault_watch.sh script",
+      "id": "scripts_vault_watch_sh__entry",
+      "community_name": "vault_watch.sh"
+    },
+    {
+      "label": "backup.sh",
+      "file_type": "code",
+      "source_file": "scripts/backup.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "backup.sh",
+      "id": "scripts_backup",
+      "community_name": "backup.sh"
+    },
+    {
+      "label": "backup.sh script",
+      "file_type": "code",
+      "source_file": "scripts/backup.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "backup.sh script",
+      "id": "scripts_backup_sh__entry",
+      "community_name": "backup.sh"
+    },
+    {
+      "label": "tree_index.sh",
+      "file_type": "code",
+      "source_file": "scripts/tree_index.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "tree_index.sh",
+      "id": "scripts_tree_index",
+      "community_name": "tree_index.sh"
+    },
+    {
+      "label": "tree_index.sh script",
+      "file_type": "code",
+      "source_file": "scripts/tree_index.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "tree_index.sh script",
+      "id": "scripts_tree_index_sh__entry",
+      "community_name": "tree_index.sh"
+    },
+    {
+      "label": "vault_sync.sh",
+      "file_type": "code",
+      "source_file": "scripts/vault_sync.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "vault_sync.sh",
+      "id": "scripts_vault_sync",
+      "community_name": "vault_sync.sh"
+    },
+    {
+      "label": "vault_sync.sh script",
+      "file_type": "code",
+      "source_file": "scripts/vault_sync.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "vault_sync.sh script",
+      "id": "scripts_vault_sync_sh__entry",
+      "community_name": "vault_sync.sh"
+    }
+  ],
+  "links": [
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L208",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions_main",
+      "target": "scripts_export_sessions_fetch_sessions"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L213",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions_main",
+      "target": "scripts_export_sessions_session_filename"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L219",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions_main",
+      "target": "scripts_export_sessions_fetch_messages"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L223",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions_main",
+      "target": "scripts_export_sessions_render_transcript"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L228",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions_main",
+      "target": "scripts_export_sessions_render_digest"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L232",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions_main",
+      "target": "scripts_export_sessions_render_index"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L101",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions_render_digest",
+      "target": "scripts_export_sessions_safe_title"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L102",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions_render_digest",
+      "target": "scripts_export_sessions_ts_to_str"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L109",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions_render_digest",
+      "target": "scripts_export_sessions_fetch_messages"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L112",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions_render_digest",
+      "target": "scripts_export_sessions_fmt_content"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L112",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions_render_digest",
+      "target": "scripts_export_sessions_truncate"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L177",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions_render_index",
+      "target": "scripts_export_sessions_safe_title"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L150",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions_render_transcript",
+      "target": "scripts_export_sessions_safe_title"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L156",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions_render_transcript",
+      "target": "scripts_export_sessions_fmt_content"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L160",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions_render_transcript",
+      "target": "scripts_export_sessions_ts_to_str"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/vault_watch.sh",
+      "source_location": "L34",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_vault_watch_sh__entry",
+      "target": "scripts_vault_watch_log"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/backup.sh",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_backup",
+      "target": "scripts_backup_sh__entry"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L149",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions",
+      "target": "scripts_export_sessions_render_transcript"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L167",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions",
+      "target": "scripts_export_sessions_render_index"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L190",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions",
+      "target": "scripts_export_sessions_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions",
+      "target": "scripts_export_sessions_ts_to_str"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions",
+      "target": "scripts_export_sessions_safe_title"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions",
+      "target": "scripts_export_sessions_truncate"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L51",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions",
+      "target": "scripts_export_sessions_fmt_content"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L58",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions",
+      "target": "scripts_export_sessions_fetch_sessions"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L74",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions",
+      "target": "scripts_export_sessions_fetch_messages"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions",
+      "target": "scripts_export_sessions_session_filename"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L99",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions",
+      "target": "scripts_export_sessions_render_digest"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/tree_index.sh",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_tree_index",
+      "target": "scripts_tree_index_sh__entry"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/vault_sync.sh",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_vault_sync",
+      "target": "scripts_vault_sync_sh__entry"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/vault_watch.sh",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_vault_watch",
+      "target": "scripts_vault_watch_sh__entry"
+    },
+    {
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/vault_watch.sh",
+      "source_location": "L28",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_vault_watch",
+      "target": "scripts_vault_watch_log"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L28",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions_rationale_28",
+      "target": "scripts_export_sessions_ts_to_str"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/export_sessions.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "scripts_export_sessions_rationale_52",
+      "target": "scripts_export_sessions_fmt_content"
+    }
+  ],
+  "hyperedges": [],
+  "built_at_commit": "456d265ecdd1fc7bd6a0c849b66bc714858e08e2"
+}
