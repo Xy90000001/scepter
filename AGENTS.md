@@ -5,15 +5,15 @@ must follow these conventions.
 
 ## Folder map
 
-| Folder | Purpose |
-|---|---|
-| `00_Inbox/` | Capture everything first — sort later |
-| `01_Tasks/` | `kanban.md` task board; checkboxes move `- [ ]` → `- [x]` |
+| Folder         | Purpose                                                   |
+| -------------- | --------------------------------------------------------- |
+| `00_Inbox/`    | Capture everything first — sort later                     |
+| `01_Tasks/`    | `kanban.md` task board; checkboxes move `- [ ]` → `- [x]` |
 | `02_Projects/` | Music, Ecom, saas, Coding — one folder per active project |
-| `03_Outreach/` | Lead tracking + templates |
-| `Brain/` | Knowledge base, notes, journal (Obsidian wikilinks) |
-| `Hermes/` | Agent layer: `Memory/`, `Sessions/`, `SOUL.md`, `Config/` |
-| `scripts/` | Sync/export tooling (portable, versioned) |
+| `03_Outreach/` | Lead tracking + templates                                 |
+| `Brain/`       | Knowledge base, notes, journal (Obsidian wikilinks)       |
+| `Hermes/`      | Agent layer: `Memory/`, `Sessions/`, `SOUL.md`, `Config/` |
+| `scripts/`     | Sync/export tooling (portable, versioned)                 |
 
 ## Task rules
 

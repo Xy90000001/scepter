@@ -1,14 +1,22 @@
 #!/bin/bash
-# Scepter vault sync — desktop version (Linux)
+# Scepter vault sync — cross-platform (Linux/macOS/Windows/Termux)
 # Order: pull --rebase -> export sessions -> sync memory -> STRUCTURE.md -> commit -> push
 # Silent when nothing changed.
 
 set -euo pipefail
 
-HOME_DIR="$HOME"
-VAULT="$HOME/scepter"
-PY="$HOME/.hermes/venv/bin/python"
-LOG="$HOME/.vault_sync.log"
+# Detect platform
+if [[ -d "/data/data/com.termux" ]]; then
+    HOME_DIR="/data/data/com.termux/files/home"
+    PY="$HOME_DIR/.hermes/venv/bin/python"
+    VAULT="$HOME_DIR/storage/shared/scepter"
+else
+    HOME_DIR="$HOME"
+    PY="$HOME/.hermes/venv/bin/python"
+    VAULT="$HOME/scepter"
+fi
+
+LOG="$HOME_DIR/.vault_sync.log"
 RECENT_DAYS="${SCEPTER_RECENT_DAYS:-14}"
 
 # 0. Pull remote first (conflict-safe)
@@ -24,8 +32,11 @@ if [[ -f "$VAULT/scripts/export_sessions.py" ]]; then
     "$PY" "$VAULT/scripts/export_sessions.py" --recent-days "$RECENT_DAYS" >/dev/null 2>&1 || true
 fi
 
-# 2. Memory sync (symlink on desktop — already in sync, but ensure)
-# No cp needed since ~/.hermes/memories -> ~/scepter/Hermes/Memory
+# 2. Memory sync (Android needs copy; PC uses symlink)
+if [[ -d "$HOME_DIR/.hermes/memories" && -d "$VAULT/Hermes/Memory" ]]; then
+    cp -u "$HOME_DIR/.hermes/memories/MEMORY.md" "$HOME_DIR/.hermes/memories/USER.md" \
+          "$VAULT/Hermes/Memory/" 2>/dev/null || true
+fi
 
 # 3. Structural index
 if [[ -f "$VAULT/scripts/tree_index.sh" ]]; then
