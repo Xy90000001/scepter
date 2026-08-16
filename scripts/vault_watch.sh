@@ -1,92 +1,54 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # vault_watch.sh — inotifywait watcher for scepter vault
-# Watches for file changes, debounces, runs vault_sync.sh
-# Runs in background; logs to ~/.vault_watch.log
+# Pulls on every file change (debounced), runs vault_sync_desktop.sh
+# Logs to ~/.vault_watch.log
 
-set -euo pipefail
+VAULT="$HOME/scepter"
+SYNC_SCRIPT="$VAULT/scripts/vault_sync_desktop.sh"
+LOG_FILE="$HOME/.vault_watch.log"
+DEBOUNCE=5
 
-VAULT="${VAULT:-$HOME/scepter}"
-SYNC_SCRIPT="$VAULT/scripts/vault_sync.sh"
-LOG_FILE="${LOG_FILE:-$HOME/.vault_watch.log}"
-DEBOUNCE_SECONDS="${DEBOUNCE_SECONDS:-3}"
+log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG_FILE"; }
 
-# Directories to watch (space-separated, no trailing slashes)
-WATCH_DIRS=(
-    "$VAULT/Brain"
-    "$VAULT/01_Tasks"
-    "$VAULT/00_Inbox"
-    "$VAULT/Hermes/Memory"
-    "$VAULT/02_Projects"
-    "$VAULT/03_Outreach"
-    "$VAULT/AGENTS.md"
-    "$VAULT/scripts"
-)
-
-# Exclude patterns (grep -E)
-EXCLUDE_PATTERN='(\.git|Hermes/Sessions|nohup\.out|\.obsidian)'
-
-log() {
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG_FILE"
-}
-
-# Check sync script exists
 if [[ ! -x "$SYNC_SCRIPT" ]]; then
-    log "ERROR: sync script not found or not executable: $SYNC_SCRIPT"
+    log "ERROR: sync script not executable: $SYNC_SCRIPT"
     exit 1
 fi
 
-# Build inotifywait args
-INOTIFY_ARGS=(
-    -q                    # quiet
-    -r                    # recursive
-    -e modify,create,delete,move,attrib
-    --exclude "$EXCLUDE_PATTERN"
-    --format '%w%f %e %T'
-    --timefmt '%s'
-)
+log "Watcher started. Watching: $VAULT"
 
-log "Starting vault watcher for: ${WATCH_DIRS[*]}"
-log "Debounce: ${DEBOUNCE_SECONDS}s | Sync: $SYNC_SCRIPT"
+# Use a temp flag file for debounce
+FLAG="/tmp/vault_watch_pending"
 
-# Debounce state
-last_event_time=0
-pending_sync=false
+# Build watch list from existing paths
+WATCH_PATHS=()
+for p in "$VAULT/Brain" "$VAULT/01_Tasks" "$VAULT/00_Inbox" \
+    "$VAULT/Hermes/Memory" "$VAULT/02_Projects" "$VAULT/03_Outreach" \
+    "$VAULT/AGENTS.md" "$VAULT/scripts"; do
+    [[ -e "$p" ]] && WATCH_PATHS+=("$p")
+done
 
-# Process events
-inotifywait "${INOTIFY_ARGS[@]}" "${WATCH_DIRS[@]}" | while IFS= read -r line; do
-    # Parse: filepath event_type timestamp
-    filepath="${line%% *}"
-    rest="${line#* }"
-    event_type="${rest%% *}"
-    event_time="${rest#* }"
+inotifywait -q -m -r -e modify,create,delete,move,attrib \
+    --exclude '(\.git|Hermes/Sessions|nohup\.out|\.obsidian)' \
+    --format '%w%f %e %T' --timefmt '%s' \
+    "${WATCH_PATHS[@]}" 2>>"$LOG_FILE" | while read -r line; do
 
-    # Skip excluded (belt-and-suspenders)
-    if [[ "$filepath" =~ $EXCLUDE_PATTERN ]]; then
-        continue
-    fi
+    log "Change detected: $line"
 
-    now=$(date +%s)
-    last_event_time=$event_time
-    pending_sync=true
+    # Touch flag file
+    touch "$FLAG"
 
-    log "Change: $event_type $filepath"
+    # Wait debounce window
+    sleep "$DEBOUNCE"
 
-    # Debounce: wait for quiet period
-    sleep "$DEBOUNCE_SECONDS"
-
-    # Check if another event arrived during debounce
-    if [[ $(date +%s) -lt $((last_event_time + DEBOUNCE_SECONDS)) ]]; then
-        continue  # more changes coming, wait for next loop iteration
-    fi
-
-    if [[ "$pending_sync" == true ]]; then
-        log "Debounce elapsed — running sync..."
-        pending_sync=false
-
+    # If flag still fresh (not modified during sleep), run sync
+    if [[ -f "$FLAG" ]]; then
+        rm -f "$FLAG"
+        log "Running sync..."
         if "$SYNC_SCRIPT" >>"$LOG_FILE" 2>&1; then
-            log "Sync completed successfully"
+            log "Sync OK"
         else
-            log "Sync FAILED (exit code $?) — check $LOG_FILE"
+            log "Sync FAILED (exit $?)"
         fi
     fi
 done
