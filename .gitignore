@@ -2,6 +2,17 @@
 .DS_Store
 Thumbs.db
 
+# ── System-specific / transient ───────────────────────────
+nohup.out
+*.log
+*.out
+*.pid
+*.tmp
+.cache/
+.vault_sync.log
+.vault_watch.log
+graphify-out/
+
 # ── Obsidian device-local state (plugin CONFIGS stay tracked) ──
 .obsidian/workspace*.json
 .obsidian/cache/
