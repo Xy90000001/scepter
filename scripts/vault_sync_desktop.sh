@@ -43,6 +43,11 @@ if [[ -f "$VAULT/scripts/tree_index.sh" ]]; then
     bash "$VAULT/scripts/tree_index.sh" "$VAULT" 2>/dev/null || true
 fi
 
+# 3b. Graphify update (incremental knowledge graph)
+if [[ -f "$VAULT/scripts/graphify_update.sh" ]]; then
+    bash "$VAULT/scripts/graphify_update.sh" 2>/dev/null || true
+fi
+
 # 4. Commit local changes (skip if nothing changed)
 cd "$VAULT"
 git add -A

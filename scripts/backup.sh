@@ -31,6 +31,16 @@ if [[ -d "$HOME_DIR/.hermes/memories" && -d "$VAULT/Hermes/Memory" ]]; then
           "$VAULT/Hermes/Memory/" 2>/dev/null || true
 fi
 
+# Structural index
+if [[ -f "$VAULT/scripts/tree_index.sh" ]]; then
+    bash "$VAULT/scripts/tree_index.sh" "$VAULT" 2>/dev/null || true
+fi
+
+# Graphify update (incremental knowledge graph)
+if [[ -f "$VAULT/scripts/graphify_update.sh" ]]; then
+    bash "$VAULT/scripts/graphify_update.sh" 2>/dev/null || true
+fi
+
 cd "$VAULT"
 git add -A
 if git diff --cached --quiet; then
