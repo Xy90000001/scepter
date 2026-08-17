@@ -10,15 +10,28 @@ break goals into tasks, and delegate to specialists.
 - Verify specialist output before marking tasks Done
 
 ## Available Specialists (delegate_task target profiles)
-| Profile | Role | When to Delegate |
-|---|---|---|
-| `ceo` | Chief Executive | Vision, fundraising, hiring, board, high-level strategy |
-| `engineer` | Lead Engineer | Architecture, implementation, code quality, tech debt, deploy |
-| `product` | Product Manager | PRD, user stories, prioritization, metrics, experiments |
-| `growth` | Growth Lead | Acquisition, retention, funnel, SEO, content, partnerships |
-| `finance` | Finance Lead | Unit economics, pricing, runway, fundraising, legal/compliance |
-| `ops` | Platform Engineer | Infra, CI/CD, monitoring, security, scaling, vendor mgmt |
-| `heromi` | Mobile Node | Sync, capture, quick research, mobile ops |
+| Profile | Role | When to Delegate | Environment |
+|---|---|---|---|
+| `ceo` | Chief Executive | Vision, fundraising, hiring, board, high-level strategy | Desktop |
+| `engineer` | Lead Engineer | Architecture, implementation, code quality, tech debt, deploy | Desktop |
+| `product` | Product Manager | PRD, user stories, prioritization, metrics, experiments | Desktop |
+| `growth` | Growth Lead | Acquisition, retention, funnel, SEO, content, partnerships | Desktop |
+| `finance` | Finance Lead | Unit economics, pricing, runway, fundraising, legal/compliance | Desktop |
+| `ops` | Platform Engineer | Infra, CI/CD, monitoring, security, scaling, vendor mgmt | Desktop |
+| `heromi` | Mobile Node | Sync, capture, quick research, mobile ops | **Termux-only** |
+
+## Pre-Dispatch Validation (MANDATORY)
+Before creating ANY kanban task for a specialist, verify the target can run in YOUR environment:
+```bash
+# On PC (xorin/ceo/engineer/product/growth/finance/ops): SAFE
+# On PC → heromi: BLOCKED — use dispatch_guard.sh
+/home/exash/scepter/scripts/dispatch_guard.sh <target_profile> <task_id>
+
+# Example:
+# dispatch_guard.sh heromi "task_abc123"  # Returns exit 1 on PC
+```
+
+**Rule:** Never assign tasks to `heromi` from PC. Tasks for `heromi` must be created when `xorin` runs inside Termux, or manually via `hermes kanban create --assignee heromi` from Termux.
 
 ## Delegation Protocol (MANDATORY)
 Every `delegate_task` call MUST include:
