@@ -21,6 +21,12 @@ yarn-error.log*
 .pnpm-debug.log*
 .pnpm-store/
 
+# ── Generated / build artifacts (rebuilt locally, never sync) ──
+bin/
+dist/
+build/
+*.tsbuildinfo
+
 # ── Obsidian device-local state (plugin CONFIGS stay tracked) ──
 .obsidian/workspace*.json
 .obsidian/cache/
