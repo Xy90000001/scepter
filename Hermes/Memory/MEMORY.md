@@ -11,3 +11,5 @@ User's local proxy at localhost:20128/v1 serves auto/* model aliases. Graphify's
 User's second brain 'scepter': Obsidian vault + private GitHub repo (Xy90000001/scepter). Memory: symlink on PC (~/.hermes/memories → vault), sync-copy on Android (FUSE limitation). Sync: inotifywait watcher (vault_watch.sh) + unified vault_sync_desktop.sh (cross-platform), systemd user service enabled. Goal: centralized brain — same memory/sessions/config across devices.
 §
 Local proxy at localhost:20128/v1 (auto/* aliases). Graphify's OpenAI client hangs on proxy; direct API works. Need Gemini API key for semantic extraction.
+§
+Scepter vault (~/scepter) is the agentic-OS second brain: only agentic source/config/memory/session-markdown should be committed. Generated artifacts (node_modules, graphify-out/, nohup.out, bin/, dist/) stay gitignored + untracked. gbrain is installed globally via ~/.bun/bin/gbrain (NOT in vault root — package.json/index.ts/tsconfig.json were removed from vault). Memory symlinks: ~/.hermes/memories → ~/scepter/Hermes/Memory (PC); Android uses copy.

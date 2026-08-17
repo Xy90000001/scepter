@@ -1,46 +1,61 @@
 # Scepter — Workspace Context
 
-This vault is the persistent, portable second brain. Any agent operating here
-must follow these conventions.
+This vault is the persistent, portable second brain for an agentic OS that runs a SaaS business. Any agent operating here must follow these conventions.
 
-## Folder map
+## Three-Layer Memory Architecture
 
-| Folder         | Purpose                                                   |
-| -------------- | --------------------------------------------------------- |
-| `00_Inbox/`    | Capture everything first — sort later                     |
-| `01_Tasks/`    | `kanban.md` task board; checkboxes move `- [ ]` → `- [x]` |
-| `02_Projects/` | Music, Ecom, saas, Coding — one folder per active project |
-| `03_Outreach/` | Lead tracking + templates                                 |
-| `Brain/`       | Knowledge base, notes, journal (Obsidian wikilinks)       |
-| `Hermes/`      | Agent layer: `Memory/`, `Sessions/`, `SOUL.md`, `Config/` |
-| `scripts/`     | Sync/export tooling (portable, versioned)                 |
+| Layer | Location | Injected? | Queried? | Purpose |
+|---|---|---|---|---|
+| **SOUL (Identity)** | `~/.hermes/profiles/<name>/SOUL.md` | ✅ Profile load | ❌ | Who the agent is, authority, tools, delegation targets |
+| **Runtime Memory** | `~/scepter/Hermes/Memory/{MEMORY.md,USER.md}` | ✅ Every session | ❌ | User facts, preferences, session continuity |
+| **Knowledge Base** | `~/scepter/Brain/Knowledge/` | ❌ | ✅ On demand | Frameworks, templates, decisions, references |
 
-## Task rules
+See `Brain/Knowledge/decisions/ADR-002-three-layer-memory.md` for full details.
 
-- In `01_Tasks/kanban.md`: `- [ ]` = todo, `- [x]` = done, `- [ ] #next` = next up.
-- Move done items to the Done column when a column layout is used.
-- Projects get a `tasks.md` + `log.md` inside their folder when they grow.
+## Folder Map
 
-## Sync behavior
+| Folder | Purpose |
+|---|---|
+| `00_Inbox/` | Capture everything first — sort later |
+| `01_Tasks/` | Kanban task board (Hermes `/kanban` + `kanban.md` mirror) |
+| `02_Projects/` | Active projects — one folder per project with `spec.md`, `tasks.md`, `log.md` |
+| `03_Outreach/` | Lead tracking + templates |
+| `Brain/Knowledge/` | **Frameworks, templates, decisions, references** — queried via gbrain/graphify |
+| `Hermes/` | Agent layer: `Memory/`, `Sessions/`, `SOUL.md` (reference), `Config/` |
+| `scripts/` | Sync/export tooling (portable, versioned) |
 
-- `scripts/vault_sync.sh` runs every 15 min (cronie): pull --rebase → export
-  sessions → sync memory → commit (timestamped, skip if clean) → push.
-- Hermes memory syncs from `~/.hermes/memories` — do not hand-edit
-  `Hermes/Memory/` on Android; edits there get overwritten by the next sync.
+## Agent Profiles (Hermes)
+
+| Profile | Role | Device |
+|---|---|---|
+| `xorin` | CEO Orchestrator | PC |
+| `heromi` | Mobile Node | Termux |
+| `ceo` | Chief Executive | PC |
+| `engineer` | Lead Engineer | PC |
+| `product` | Product Manager | PC |
+| `growth` | Growth Lead | PC |
+| `finance` | Finance Lead | PC |
+| `ops` | Platform Engineer | PC |
+
+Each profile has a `SOUL.md` defining its role, tools, and delegation authority. See `Brain/Knowledge/decisions/ADR-003-profile-agents.md`.
+
+## Task Rules
+
+- **Kanban workflow:** Backlog → Discovery → Validating → Spec'ing → Building → Launching → Growing → Done
+- **Only orchestrators (`xorin`, `ceo`) create tasks for specialists** — they own the pipeline
+- **Specialists are leaf agents** — they execute, don't delegate further
+- **Every task must include:** goal, context (linked docs, decisions), success criteria, assignee (profile name)
+- **Done requires verification** — orchestrator checks output before closing
+- In `01_Tasks/kanban.md` (Obsidian mirror): `- [ ]` = todo, `- [ ] #next` = next up, `- [x]` = done
+
+## Sync Behavior
+
+- `scripts/vault_sync_desktop.sh` runs every 15 min (cronie): pull --rebase → export sessions → sync memory → STRUCTURE.md → graphify update → commit (timestamped, skip if clean) → push.
+- Hermes memory syncs from `~/.hermes/memories` — do not hand-edit `Hermes/Memory/` on Android; edits there get overwritten by the next sync.
 - `Hermes/Sessions/` is generated — never edit by hand.
+- `graphify update .` runs on every sync to keep code graph current.
 
-## Logging & notes
-
-- Date-stamp log entries: `2026-08-08`.
-- Daily notes go in `Brain/Journal/` as `YYYY-MM-DD.md`.
-- Prefer `[[wikilinks]]` over raw paths.
-
-## Secrets
-
-- Never commit `.env`, `auth.json`, `*.db`, `*.jsonl`, tokens, or keys —
-  all gitignored. `state.db` stays local in `~/.hermes/`.
-
-## Token & Context Optimization Rules
+## Token & Context Optimization Rules (MANDATORY)
 
 1. **NEVER use text-scanning commands** (like `grep`, `cat`, or `find`) to search across directories if a Knowledge Graph tool is available.
 
@@ -58,10 +73,52 @@ must follow these conventions.
    gbrain ask "question"
    ```
 
-4. **You are strictly token-budgeted**. Only load raw file contents into the context window if the graph query points to it as an explicit, high-confidence match.
+4. **For frameworks, templates, decisions, references** → ALWAYS query `gbrain` in `Brain/Knowledge/`:
+   ```bash
+   gbrain search "market analysis framework"
+   gbrain search "PRD template"
+   ```
 
-5. **Default workflow**:
+5. **You are strictly token-budgeted**. Only load raw file contents into the context window if the graph query points to it as an explicit, high-confidence match.
+
+6. **Default workflow**:
    - Graph query → identify relevant files → read only those files
    - Never `grep -r` or `cat` entire directories
    - Use `graphify query` for structural/architectural questions
-   - Use `gbrain search/query` for factual/memory/session questions
+   - Use `gbrain search/query` for factual/memory/knowledge questions
+
+## Secrets
+
+- Never commit `.env`, `auth.json`, `*.db`, `*.jsonl`, tokens, or keys — all gitignored. `state.db` stays local in `~/.hermes/`.
+
+## Knowledge Base Structure
+
+```
+Brain/Knowledge/
+├── frameworks/           # Reusable decision frameworks
+│   ├── market-analysis.md
+│   ├── mvp-scoping.md
+│   ├── tech-selection.md
+│   └── prioritization.md
+├── templates/            # Structured templates agents fill in
+│   ├── prd.md
+│   ├── experiment.md
+│   ├── architecture-decision.md
+│   └── launch-checklist.md
+├── decisions/            # Immutable ADRs (Architecture Decision Records)
+│   ├── README.md         # Index
+│   ├── ADR-001-scepter-vault-backbone.md
+│   ├── ADR-002-three-layer-memory.md
+│   ├── ADR-003-profile-agents.md
+│   ├── ADR-004-kanban-routing.md
+│   └── ADR-005-knowledge-queries.md
+└── references/           # External knowledge worth keeping
+    └── (add as needed)
+```
+
+## Logging & Notes
+
+- Date-stamp log entries: `2026-08-08`.
+- Daily notes go in `Brain/Journal/` as `YYYY-MM-DD.md`.
+- Prefer `[[wikilinks]]` over raw paths.
+- Important decisions from sessions → new ADR in `Brain/Knowledge/decisions/`.
