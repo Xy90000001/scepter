@@ -6,10 +6,6 @@ User interrupts mid-task ('wait', 'stop') to take over — stop promptly and giv
 §
 User wants orchestrator pattern with specialist agents: coder (uses aider/claude-code/codex), researcher, reviewer. Subagents get goal+context, return summaries.
 §
-User's local proxy at localhost:20128/v1 serves auto/* model aliases. Graphify's openai backend hangs on this proxy despite direct API calls working.
+User is building a 'second brain' (Obsidian vault 'scepter') synced across Android (Termux/Hermes) and PC via private GitHub repo Xy90000001/scepter. Centralized memory so any agent on any device shares the same context. Local proxy at localhost:20128/v1 serves auto/* model aliases; Graphify's OpenAI client hangs on proxy but direct API works. Scepter vault: only agentic source/config/memory/session-markdown committed; generated artifacts (node_modules, graphify-out/, nohup.out, bin/, dist/) gitignored. gbrain installed globally via ~/.bun/bin/gbrain. Memory symlinks: ~/.hermes/memories → ~/scepter/Hermes/Memory (PC); Android uses copy.
 §
-User's second brain 'scepter': Obsidian vault + private GitHub repo (Xy90000001/scepter). Memory: symlink on PC (~/.hermes/memories → vault), sync-copy on Android (FUSE limitation). Sync: inotifywait watcher (vault_watch.sh) + unified vault_sync_desktop.sh (cross-platform), systemd user service enabled. Goal: centralized brain — same memory/sessions/config across devices.
-§
-Local proxy at localhost:20128/v1 (auto/* aliases). Graphify's OpenAI client hangs on proxy; direct API works. Need Gemini API key for semantic extraction.
-§
-Scepter vault (~/scepter) is the agentic-OS second brain: only agentic source/config/memory/session-markdown should be committed. Generated artifacts (node_modules, graphify-out/, nohup.out, bin/, dist/) stay gitignored + untracked. gbrain is installed globally via ~/.bun/bin/gbrain (NOT in vault root — package.json/index.ts/tsconfig.json were removed from vault). Memory symlinks: ~/.hermes/memories → ~/scepter/Hermes/Memory (PC); Android uses copy.
+User wants an agentic OS system to run a SaaS from scratch: CEO orchestrator (xorin) delegates to specialists (engineer, product, growth, finance, ops, ceo) via kanban. heromi is mobile-only (Termux). No crons/projects until product decided. Cross-platform: all scripts work on Linux PC and Android Termux. Profiles live in vault (Hermes/Profiles/) and symlink to ~/.hermes/profiles/. Environment guards enforce heromi=Termux-only, xorin=PC-only.
