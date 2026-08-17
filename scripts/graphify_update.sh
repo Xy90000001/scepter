@@ -8,10 +8,10 @@ set -euo pipefail
 # Detect platform
 if [[ -d "/data/data/com.termux" ]]; then
     HOME_DIR="/data/data/com.termux/files/home"
-    VAULT="$HOME_DIR/storage/shared/scepter"
+    VAULT="${VAULT_ROOT:-$HOME_DIR/storage/shared/scepter}"
 else
     HOME_DIR="$HOME"
-    VAULT="$HOME/scepter"
+    VAULT="${VAULT_ROOT:-$HOME/scepter}"
 fi
 
 cd "$VAULT"

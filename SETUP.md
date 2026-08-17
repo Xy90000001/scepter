@@ -53,13 +53,20 @@ rmdir ~/.hermes/memories
 ln -s ~/scepter/Hermes/Memory ~/.hermes/memories
 ```
 
-### 5. Credentials (per-device, never committed)
+### 5. Point Hermes profiles at the vault
+```bash
+# after the first `hermes` run creates ~/.hermes
+rmdir ~/.hermes/profiles
+ln -s ~/scepter/Hermes/Profiles ~/.hermes/profiles
+```
+
+### 6. Credentials (per-device, never committed)
 - `.env` lives in `~/.hermes/.env` on each machine — **secrets never go in the repo**.
 - This device uses a local proxy at `localhost:20128` (`auto/*` aliases). On your PC
   either run the same backend or point Hermes at your own provider:
   `hermes model` / `hermes setup`.
 
-### 6. Config template
+### 7. Config template
 `Hermes/Config/config.yaml` is a reference copy of this device's settings — edit and
 adapt, never assume it's current.
 
@@ -69,16 +76,15 @@ adapt, never assume it's current.
 
 | Trigger | What runs |
 |---|---|
-| Every 15 min (cronie `crond` on Termux) | `scripts/vault_sync.sh`: pull --rebase → session export → memory sync → STRUCTURE.md → commit → push |
+| Every 15 min (cronie `crond` on Termux) | `scripts/vault_sync.sh`: pull --rebase → session export → memory sync → graphify update → gbrain embed → commit → push |
 | Obsidian Git (phone/PC) | Pull on startup, push on save — keeps `00–04`, `Brain/` + memory in sync |
 | Manual | `bash ~/storage/shared/scepter/scripts/vault_sync.sh` (Termux) or `~/scepter/scripts/vault_sync.sh` (PC) |
 
 **Memory lives in the vault.** How the live files get there differs by platform:
 - **PC (symlink):** `~/.hermes/memories` → `~/scepter/Hermes/Memory` — Hermes writes straight into the repo.
-- **Android (sync):** live files stay in `~/.hermes/memories` because Android shared
-  storage can't `flock` (FUSE limitation) — `vault_sync.sh` copies them
-  into `Hermes/Memory/` every 15 min. Don't hand-edit `Hermes/Memory/` on Android; edits
-  on PC sync down fine.
+- **Android (sync):** live files stay in `~/.hermes/memories` because Android shared storage can't `flock` (FUSE limitation) — `vault_sync.sh` copies them into `Hermes/Memory/` every 15 min. Don't hand-edit `Hermes/Memory/` on Android; edits on PC sync down fine.
+
+**Profiles live in the vault too:** `~/scepter/Hermes/Profiles/` → symlinked to `~/.hermes/profiles/` on each device. SOUL.md changes sync via git.
 
 ---
 

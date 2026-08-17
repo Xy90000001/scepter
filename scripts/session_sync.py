@@ -20,8 +20,9 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-# Config
-VAULT = Path("/home/exash/scepter")
+# Config (portable: override with VAULT_ROOT env var)
+VAULT_ROOT = os.environ.get("VAULT_ROOT", "/home/exash/scepter")
+VAULT = Path(VAULT_ROOT)
 SESSIONS_DIR = VAULT / "Hermes" / "Sessions"
 DB_PATH = Path("~/.hermes/state.db").expanduser()
 
