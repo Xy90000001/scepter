@@ -53,3 +53,8 @@ auth.json
 
 # Lock files
 *.lock
+
+# ── Runtime caches (modified by live agents, never sync) ──
+Hermes/Profiles/*/cache/
+Hermes/Profiles/*/context_length_cache.yaml
+Hermes/Profiles/*/local_endpoint_probes.json
