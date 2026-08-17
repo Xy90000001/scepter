@@ -39,3 +39,29 @@ must follow these conventions.
 
 - Never commit `.env`, `auth.json`, `*.db`, `*.jsonl`, tokens, or keys —
   all gitignored. `state.db` stays local in `~/.hermes/`.
+
+## Token & Context Optimization Rules
+
+1. **NEVER use text-scanning commands** (like `grep`, `cat`, or `find`) to search across directories if a Knowledge Graph tool is available.
+
+2. **For codebase, architecture, or technical dependency queries** → ALWAYS query `graphify` first:
+   ```bash
+   graphify query "how does X work"
+   graphify path "ModuleA" "ModuleB"
+   graphify explain "Concept"
+   ```
+
+3. **For personal memories, past sessions, timelines, or note cross-references** → ALWAYS query `gbrain` first:
+   ```bash
+   gbrain search "query"
+   gbrain query "question"
+   gbrain ask "question"
+   ```
+
+4. **You are strictly token-budgeted**. Only load raw file contents into the context window if the graph query points to it as an explicit, high-confidence match.
+
+5. **Default workflow**:
+   - Graph query → identify relevant files → read only those files
+   - Never `grep -r` or `cat` entire directories
+   - Use `graphify query` for structural/architectural questions
+   - Use `gbrain search/query` for factual/memory/session questions
