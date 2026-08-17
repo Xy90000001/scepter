@@ -157,10 +157,21 @@ def import_sessions():
             elif line.startswith("**Updated:**"):
                 updated_at = line.split("**Updated:**")[1].strip()
         
-        # Insert session
+        # Insert session with all required NOT NULL columns
         cursor.execute("""
-            INSERT INTO sessions (id, title, started_at, last_activity_at, profile_name)
-            VALUES (?, ?, ?, ?, 'default')
+            INSERT INTO sessions (
+                id, title, started_at, last_activity_at, profile_name,
+                source, chat_type, message_count, tool_call_count,
+                input_tokens, output_tokens, estimated_cost_usd, actual_cost_usd,
+                model, system_prompt, compression_fallback_streak, compression_ineffective_count,
+                archived, pinned, hidden
+            ) VALUES (
+                ?, ?, ?, ?, 'default',
+                'import', 'conversation', 0, 0,
+                0, 0, 0.0, 0.0,
+                'unknown', '', 0, 0,
+                0, 0, 0
+            )
         """, (
             session_id,
             title,
