@@ -14,7 +14,7 @@ from pathlib import Path
 VAULT_ROOT = os.environ.get("VAULT_ROOT", "/home/exash/scepter")
 VAULT = Path(VAULT_ROOT)
 TASKS_FILE = VAULT / "01_Tasks" / "kanban_tasks.json"
-DB_PATH = Path("~/.hermes/state.db").expanduser()
+DB_PATH = Path("~/.hermes/kanban.db").expanduser()
 
 
 def export_tasks():
@@ -28,16 +28,17 @@ def export_tasks():
     cursor = conn.cursor()
 
     # Check if kanban_tasks table exists
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='kanban_tasks'")
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='tasks'")
     if not cursor.fetchone():
-        print("kanban_tasks table not found")
+        print("tasks table not found")
         conn.close()
         return
 
     cursor.execute("""
         SELECT id, title, body, status, assignee, priority, idempotency_key,
-               created_at, updated_at, board_id, column_id
-        FROM kanban_tasks
+               created_at, started_at, completed_at, claim_lock, block_kind,
+               session_id, skills, model_override, provider_override
+        FROM tasks
         ORDER BY created_at DESC
     """)
 
@@ -52,9 +53,14 @@ def export_tasks():
             "priority": row["priority"],
             "idempotency_key": row["idempotency_key"],
             "created_at": row["created_at"],
-            "updated_at": row["updated_at"],
-            "board_id": row["board_id"],
-            "column_id": row["column_id"]
+            "started_at": row["started_at"],
+            "completed_at": row["completed_at"],
+            "claim_lock": row["claim_lock"],
+            "block_kind": row["block_kind"],
+            "session_id": row["session_id"],
+            "skills": row["skills"],
+            "model_override": row["model_override"],
+            "provider_override": row["provider_override"]
         })
 
     conn.close()
@@ -85,34 +91,39 @@ def import_tasks():
 
     for task in tasks:
         # Check if task already exists (by idempotency_key)
-        cursor.execute("SELECT id FROM kanban_tasks WHERE idempotency_key = ?", (task["idempotency_key"],))
+        cursor.execute("SELECT id FROM tasks WHERE idempotency_key = ?", (task["idempotency_key"],))
         existing = cursor.fetchone()
 
         if existing:
             # Update existing
             cursor.execute("""
-                UPDATE kanban_tasks SET
+                UPDATE tasks SET
                     title = ?, body = ?, status = ?, assignee = ?, priority = ?,
-                    updated_at = ?, board_id = ?, column_id = ?
+                    started_at = ?, completed_at = ?, claim_lock = ?, block_kind = ?,
+                    session_id = ?, skills = ?, model_override = ?, provider_override = ?
                 WHERE idempotency_key = ?
             """, (
                 task["title"], task["body"], task["status"], task["assignee"],
-                task["priority"], task["updated_at"], task["board_id"],
-                task["column_id"], task["idempotency_key"]
+                task["priority"], task["started_at"], task["completed_at"],
+                task["claim_lock"], task["block_kind"], task["session_id"],
+                task["skills"], task["model_override"], task["provider_override"],
+                task["idempotency_key"]
             ))
             skipped += 1
         else:
             # Insert new
             cursor.execute("""
-                INSERT INTO kanban_tasks (
+                INSERT INTO tasks (
                     id, title, body, status, assignee, priority, idempotency_key,
-                    created_at, updated_at, board_id, column_id
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    created_at, started_at, completed_at, claim_lock, block_kind,
+                    session_id, skills, model_override, provider_override
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 task["id"], task["title"], task["body"], task["status"],
                 task["assignee"], task["priority"], task["idempotency_key"],
-                task["created_at"], task["updated_at"], task["board_id"],
-                task["column_id"]
+                task["created_at"], task["started_at"], task["completed_at"],
+                task["claim_lock"], task["block_kind"], task["session_id"],
+                task["skills"], task["model_override"], task["provider_override"]
             ))
             imported += 1
 

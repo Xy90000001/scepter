@@ -40,6 +40,17 @@ if [[ -f "$VAULT/scripts/session_sync.py" ]]; then
     "$PY" "$VAULT/scripts/session_sync.py" export --recent-days "$RECENT_DAYS" >> "$LOG" 2>&1 || true
 fi
 
+# 1b. Kanban tasks export (PC) / import (Termux)
+if [[ -f "$VAULT/scripts/kanban_sync.py" ]]; then
+    if [[ "$PLATFORM" == "desktop" ]]; then
+        # PC: export tasks to JSON for sync
+        "$PY" "$VAULT/scripts/kanban_sync.py" export >> "$LOG" 2>&1 || true
+    else
+        # Termux: import tasks from JSON
+        "$PY" "$VAULT/scripts/kanban_sync.py" import >> "$LOG" 2>&1 || true
+    fi
+fi
+
 # 2. Memory sync (Android needs copy; PC uses symlink but copy is safe both ways)
 if [[ -d "$HOME_DIR/.hermes/memories" && -d "$VAULT/Hermes/Memory" ]]; then
     cp -u "$HOME_DIR/.hermes/memories/MEMORY.md" "$HOME_DIR/.hermes/memories/USER.md" \
