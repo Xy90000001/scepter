@@ -51,6 +51,11 @@ if [[ -f "$VAULT/scripts/kanban_sync.py" ]]; then
     fi
 fi
 
+# 1c. Per-profile symlinks (ensure heromi only on Termux, etc.)
+if [[ -f "$VAULT/scripts/setup_symlinks.sh" ]]; then
+    bash "$VAULT/scripts/setup_symlinks.sh" >> "$LOG" 2>&1 || true
+fi
+
 # 2. Memory sync (Android needs copy; PC uses symlink but copy is safe both ways)
 if [[ -d "$HOME_DIR/.hermes/memories" && -d "$VAULT/Hermes/Memory" ]]; then
     cp -u "$HOME_DIR/.hermes/memories/MEMORY.md" "$HOME_DIR/.hermes/memories/USER.md" \
