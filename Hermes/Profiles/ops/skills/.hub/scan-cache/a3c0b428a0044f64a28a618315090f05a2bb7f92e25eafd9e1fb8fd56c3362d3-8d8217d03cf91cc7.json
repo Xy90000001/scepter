@@ -1,0 +1,99 @@
+{
+  "source": "skills-sh/orchestra-research/ai-research-skills/serving-llms-vllm",
+  "source_url": "https://github.com/orchestra-research/ai-research-skills/tree/773a52944ba4747a18bd4ae9ade53fff041adcbc/12-inference-serving/vllm",
+  "bundle_hash": "sha256:a3c0b428a0044f64a28a618315090f05a2bb7f92e25eafd9e1fb8fd56c3362d3",
+  "scanner_version": "skills-guard-v1",
+  "verdict": "dangerous",
+  "trust_level": "community",
+  "findings": [
+    {
+      "pattern_id": "unpinned_pip_install",
+      "severity": "medium",
+      "category": "supply_chain",
+      "file": "SKILL.md",
+      "line": 19,
+      "match": "pip install vllm",
+      "description": "pip install without version pinning"
+    },
+    {
+      "pattern_id": "unpinned_pip_install",
+      "severity": "medium",
+      "category": "supply_chain",
+      "file": "SKILL.md",
+      "line": 97,
+      "match": "pip install locust",
+      "description": "pip install without version pinning"
+    },
+    {
+      "pattern_id": "unpinned_pip_install",
+      "severity": "medium",
+      "category": "supply_chain",
+      "file": "references/quantization.md",
+      "line": 204,
+      "match": "pip install autoawq",
+      "description": "pip install without version pinning"
+    },
+    {
+      "pattern_id": "unpinned_pip_install",
+      "severity": "medium",
+      "category": "supply_chain",
+      "file": "references/quantization.md",
+      "line": 213,
+      "match": "pip install auto-gptq",
+      "description": "pip install without version pinning"
+    },
+    {
+      "pattern_id": "unpinned_pip_install",
+      "severity": "medium",
+      "category": "supply_chain",
+      "file": "references/troubleshooting.md",
+      "line": 193,
+      "match": "pip install flash-attn --no-build-isolation",
+      "description": "pip install without version pinning"
+    },
+    {
+      "pattern_id": "sudo_usage",
+      "severity": "high",
+      "category": "privilege_escalation",
+      "file": "references/troubleshooting.md",
+      "line": 222,
+      "match": "sudo ufw allow 8000",
+      "description": "uses sudo (privilege escalation)"
+    },
+    {
+      "pattern_id": "unpinned_pip_install",
+      "severity": "medium",
+      "category": "supply_chain",
+      "file": "references/optimization.md",
+      "line": 164,
+      "match": "pip install locust",
+      "description": "pip install without version pinning"
+    },
+    {
+      "pattern_id": "dns_exfil",
+      "severity": "critical",
+      "category": "exfiltration",
+      "file": "references/server-deployment.md",
+      "line": 135,
+      "match": "proxy_set_header Host $host;",
+      "description": "DNS lookup with variable interpolation (possible DNS exfiltration)"
+    },
+    {
+      "pattern_id": "unpinned_pip_install",
+      "severity": "medium",
+      "category": "supply_chain",
+      "file": "references/server-deployment.md",
+      "line": 18,
+      "match": "RUN pip install vllm",
+      "description": "pip install without version pinning"
+    }
+  ],
+  "rules": [
+    "dns_exfil",
+    "sudo_usage",
+    "unpinned_pip_install"
+  ],
+  "scanned_at": "2026-08-16T15:58:22.502156+00:00",
+  "summary": "vllm: dangerous \u2014 9 finding(s) in exfiltration, privilege_escalation, supply_chain",
+  "fresh": true
+}

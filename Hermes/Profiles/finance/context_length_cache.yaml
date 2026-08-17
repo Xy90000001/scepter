@@ -1,0 +1,2 @@
+context_lengths:
+  auto/best-reasoning@http://localhost:20128/v1: 200000

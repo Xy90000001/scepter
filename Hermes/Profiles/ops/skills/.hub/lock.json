@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "installed": {
+    "stripe": {
+      "source": "skills.sh",
+      "identifier": "skills-sh/mindrally/skills/stripe",
+      "trust_level": "community",
+      "scan_verdict": "safe",
+      "content_hash": "sha256:a06988621e5271b7",
+      "install_path": "stripe",
+      "files": [
+        "SKILL.md"
+      ],
+      "metadata": {
+        "source_url": "https://github.com/mindrally/skills/tree/05a71308897983093248d719a2ffa1bca61d0768/stripe",
+        "source_revision": "05a71308897983093248d719a2ffa1bca61d0768"
+      },
+      "scan_provenance": {
+        "source": "skills-sh/mindrally/skills/stripe",
+        "source_url": "https://github.com/mindrally/skills/tree/05a71308897983093248d719a2ffa1bca61d0768/stripe",
+        "bundle_hash": "sha256:a06988621e5271b75c57d0e97be631c6997162183263a7bffc0901fbb30e968b",
+        "scanner_version": "skills-guard-v1",
+        "verdict": "safe",
+        "trust_level": "community",
+        "findings": [],
+        "rules": [],
+        "scanned_at": "2026-08-16T15:59:21.831051+00:00",
+        "summary": "stripe: clean scan, no threats detected",
+        "fresh": true
+      },
+      "installed_at": "2026-08-16T15:59:21.843510+00:00",
+      "updated_at": "2026-08-16T15:59:21.843529+00:00"
+    },
+    "stripe-link-cli": {
+      "source": "official",
+      "identifier": "official/payments/stripe-link-cli",
+      "trust_level": "builtin",
+      "scan_verdict": "safe",
+      "content_hash": "sha256:b9d815ad528e8c17",
+      "install_path": "payments/stripe-link-cli",
+      "files": [
+        "SKILL.md"
+      ],
+      "metadata": {},
+      "scan_provenance": {
+        "source": "official",
+        "source_url": "official/payments/stripe-link-cli",
+        "bundle_hash": "sha256:b9d815ad528e8c17192908dedea2a7efbf1c91e780556451745fe08a12a67bd8",
+        "scanner_version": "skills-guard-v1",
+        "verdict": "safe",
+        "trust_level": "builtin",
+        "findings": [
+          {
+            "pattern_id": "unpinned_npm_install",
+            "severity": "medium",
+            "category": "supply_chain",
+            "file": "SKILL.md",
+            "line": 49,
+            "match": "npm install -g @stripe/link-cli",
+            "description": "npm install without version pinning"
+          }
+        ],
+        "rules": [
+          "unpinned_npm_install"
+        ],
+        "scanned_at": "2026-08-16T16:03:17.790082+00:00",
+        "summary": "stripe-link-cli: safe — 1 finding(s) in supply_chain",
+        "fresh": true
+      },
+      "installed_at": "2026-08-16T16:03:17.796870+00:00",
+      "updated_at": "2026-08-16T16:03:17.796886+00:00"
+    },
+    "stripe-projects": {
+      "source": "official",
+      "identifier": "official/payments/stripe-projects",
+      "trust_level": "builtin",
+      "scan_verdict": "safe",
+      "content_hash": "sha256:4b902fbb877ec03f",
+      "install_path": "payments/stripe-projects",
+      "files": [
+        "SKILL.md"
+      ],
+      "metadata": {},
+      "scan_provenance": {
+        "source": "official",
+        "source_url": "official/payments/stripe-projects",
+        "bundle_hash": "sha256:4b902fbb877ec03ff941e0df1d14aafd82038e8251ba88ae91e95b4c3043a540",
+        "scanner_version": "skills-guard-v1",
+        "verdict": "safe",
+        "trust_level": "builtin",
+        "findings": [],
+        "rules": [],
+        "scanned_at": "2026-08-16T16:03:20.729143+00:00",
+        "summary": "stripe-projects: clean scan, no threats detected",
+        "fresh": true
+      },
+      "installed_at": "2026-08-16T16:03:20.735743+00:00",
+      "updated_at": "2026-08-16T16:03:20.735760+00:00"
+    },
+    "ce-simplify-code": {
+      "source": "skills.sh",
+      "identifier": "skills-sh/everyinc/compound-engineering-plugin/ce-simplify-code",
+      "trust_level": "community",
+      "scan_verdict": "safe",
+      "content_hash": "sha256:7a3e3dced06c3473",
+      "install_path": "ce-simplify-code",
+      "files": [
+        "SKILL.md",
+        "references/personas/code-quality-reviewer.md",
+        "references/personas/code-reuse-reviewer.md",
+        "references/personas/efficiency-reviewer.md"
+      ],
+      "metadata": {
+        "source_url": "https://github.com/everyinc/compound-engineering-plugin/tree/57e586d66194585757ffa30a23dcd0f4ec0210a4/skills/ce-simplify-code",
+        "source_revision": "57e586d66194585757ffa30a23dcd0f4ec0210a4"
+      },
+      "scan_provenance": {
+        "source": "skills-sh/everyinc/compound-engineering-plugin/ce-simplify-code",
+        "source_url": "https://github.com/everyinc/compound-engineering-plugin/tree/57e586d66194585757ffa30a23dcd0f4ec0210a4/skills/ce-simplify-code",
+        "bundle_hash": "sha256:7a3e3dced06c3473b4bf07d6240374756cce039c634256bca1bef4cdc7c7c68d",
+        "scanner_version": "skills-guard-v1",
+        "verdict": "safe",
+        "trust_level": "community",
+        "findings": [],
+        "rules": [],
+        "scanned_at": "2026-08-16T16:03:41.408520+00:00",
+        "summary": "ce-simplify-code: clean scan, no threats detected",
+        "fresh": true
+      },
+      "installed_at": "2026-08-16T16:03:41.419484+00:00",
+      "updated_at": "2026-08-16T16:03:41.419502+00:00"
+    }
+  }
+}

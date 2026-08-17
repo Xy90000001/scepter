@@ -1,0 +1,13 @@
+{
+  "source": "skills-sh/everyinc/compound-engineering-plugin/ce-simplify-code",
+  "source_url": "https://github.com/everyinc/compound-engineering-plugin/tree/57e586d66194585757ffa30a23dcd0f4ec0210a4/skills/ce-simplify-code",
+  "bundle_hash": "sha256:7a3e3dced06c3473b4bf07d6240374756cce039c634256bca1bef4cdc7c7c68d",
+  "scanner_version": "skills-guard-v1",
+  "verdict": "safe",
+  "trust_level": "community",
+  "findings": [],
+  "rules": [],
+  "scanned_at": "2026-08-16T16:03:41.408520+00:00",
+  "summary": "ce-simplify-code: clean scan, no threats detected",
+  "fresh": true
+}

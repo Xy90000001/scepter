@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "installed": {
+    "saas-metrics": {
+      "source": "skills.sh",
+      "identifier": "skills-sh/claude-office-skills/skills/saas-metrics",
+      "trust_level": "community",
+      "scan_verdict": "safe",
+      "content_hash": "sha256:e83a7149304df170",
+      "install_path": "saas-metrics",
+      "files": [
+        "SKILL.md"
+      ],
+      "metadata": {
+        "source_url": "https://github.com/claude-office-skills/skills/tree/9c4c7d5cd2813a8936bf2c9fdb174ea883b85a11/saas-metrics",
+        "source_revision": "9c4c7d5cd2813a8936bf2c9fdb174ea883b85a11"
+      },
+      "scan_provenance": {
+        "source": "skills-sh/claude-office-skills/skills/saas-metrics",
+        "source_url": "https://github.com/claude-office-skills/skills/tree/9c4c7d5cd2813a8936bf2c9fdb174ea883b85a11/saas-metrics",
+        "bundle_hash": "sha256:e83a7149304df170a406d93ed723f3e446edfdd33da28697edc8b08fb92ca314",
+        "scanner_version": "skills-guard-v1",
+        "verdict": "safe",
+        "trust_level": "community",
+        "findings": [],
+        "rules": [],
+        "scanned_at": "2026-08-16T15:59:49.847685+00:00",
+        "summary": "saas-metrics: clean scan, no threats detected",
+        "fresh": true
+      },
+      "installed_at": "2026-08-16T15:59:49.856778+00:00",
+      "updated_at": "2026-08-16T15:59:49.856795+00:00"
+    },
+    "saas-revenue-growth-metrics": {
+      "source": "skills.sh",
+      "identifier": "skills-sh/deanpeters/product-manager-skills/saas-revenue-growth-metrics",
+      "trust_level": "community",
+      "scan_verdict": "safe",
+      "content_hash": "sha256:932efcb0e1a5ad06",
+      "install_path": "saas-revenue-growth-metrics",
+      "files": [
+        "SKILL.md"
+      ],
+      "metadata": {
+        "source_url": "https://github.com/deanpeters/product-manager-skills/tree/a03af68414bb0b924746c97bddf9a5057d017af7/skills/saas-revenue-growth-metrics",
+        "source_revision": "a03af68414bb0b924746c97bddf9a5057d017af7"
+      },
+      "scan_provenance": {
+        "source": "skills-sh/deanpeters/product-manager-skills/saas-revenue-growth-metrics",
+        "source_url": "https://github.com/deanpeters/product-manager-skills/tree/a03af68414bb0b924746c97bddf9a5057d017af7/skills/saas-revenue-growth-metrics",
+        "bundle_hash": "sha256:932efcb0e1a5ad064e91e81a90294f459ad300738f4980c38d9ee1c44399d603",
+        "scanner_version": "skills-guard-v1",
+        "verdict": "safe",
+        "trust_level": "community",
+        "findings": [],
+        "rules": [],
+        "scanned_at": "2026-08-16T15:59:56.749170+00:00",
+        "summary": "saas-revenue-growth-metrics: clean scan, no threats detected",
+        "fresh": true
+      },
+      "installed_at": "2026-08-16T15:59:56.757125+00:00",
+      "updated_at": "2026-08-16T15:59:56.757140+00:00"
+    },
+    "saas-economics-efficiency-metrics": {
+      "source": "skills.sh",
+      "identifier": "skills-sh/deanpeters/product-manager-skills/saas-economics-efficiency-metrics",
+      "trust_level": "community",
+      "scan_verdict": "safe",
+      "content_hash": "sha256:92641cd56062d282",
+      "install_path": "saas-economics-efficiency-metrics",
+      "files": [
+        "SKILL.md"
+      ],
+      "metadata": {
+        "source_url": "https://github.com/deanpeters/product-manager-skills/tree/a03af68414bb0b924746c97bddf9a5057d017af7/skills/saas-economics-efficiency-metrics",
+        "source_revision": "a03af68414bb0b924746c97bddf9a5057d017af7"
+      },
+      "scan_provenance": {
+        "source": "skills-sh/deanpeters/product-manager-skills/saas-economics-efficiency-metrics",
+        "source_url": "https://github.com/deanpeters/product-manager-skills/tree/a03af68414bb0b924746c97bddf9a5057d017af7/skills/saas-economics-efficiency-metrics",
+        "bundle_hash": "sha256:92641cd56062d282e0e0be03ba956d2d10bc14514d0c03fe2bb1e061c7645788",
+        "scanner_version": "skills-guard-v1",
+        "verdict": "safe",
+        "trust_level": "community",
+        "findings": [],
+        "rules": [],
+        "scanned_at": "2026-08-16T16:00:15.466265+00:00",
+        "summary": "saas-economics-efficiency-metrics: clean scan, no threats detected",
+        "fresh": true
+      },
+      "installed_at": "2026-08-16T16:00:15.474095+00:00",
+      "updated_at": "2026-08-16T16:00:15.474111+00:00"
+    },
+    "saas-valuation-compression": {
+      "source": "skills.sh",
+      "identifier": "skills-sh/himself65/finance-skills/saas-valuation-compression",
+      "trust_level": "community",
+      "scan_verdict": "safe",
+      "content_hash": "sha256:db64f01c38443ed5",
+      "install_path": "saas-valuation-compression",
+      "files": [
+        "SKILL.md"
+      ],
+      "metadata": {
+        "source_url": "https://github.com/himself65/finance-skills/tree/81e1f50900a1b967fa34e5777ea560429311f7f0/plugins/market-analysis/skills/saas-valuation-compression",
+        "source_revision": "81e1f50900a1b967fa34e5777ea560429311f7f0"
+      },
+      "scan_provenance": {
+        "source": "skills-sh/himself65/finance-skills/saas-valuation-compression",
+        "source_url": "https://github.com/himself65/finance-skills/tree/81e1f50900a1b967fa34e5777ea560429311f7f0/plugins/market-analysis/skills/saas-valuation-compression",
+        "bundle_hash": "sha256:db64f01c38443ed50c06705b7dc984588a4faa06cebd248e6f252e824b750de8",
+        "scanner_version": "skills-guard-v1",
+        "verdict": "safe",
+        "trust_level": "community",
+        "findings": [],
+        "rules": [],
+        "scanned_at": "2026-08-16T16:00:22.218712+00:00",
+        "summary": "saas-valuation-compression: clean scan, no threats detected",
+        "fresh": true
+      },
+      "installed_at": "2026-08-16T16:00:22.228296+00:00",
+      "updated_at": "2026-08-16T16:00:22.228314+00:00"
+    }
+  }
+}

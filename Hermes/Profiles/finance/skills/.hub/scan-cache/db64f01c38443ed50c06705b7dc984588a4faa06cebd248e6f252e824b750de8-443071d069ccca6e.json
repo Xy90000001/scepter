@@ -1,0 +1,13 @@
+{
+  "source": "skills-sh/himself65/finance-skills/saas-valuation-compression",
+  "source_url": "https://github.com/himself65/finance-skills/tree/81e1f50900a1b967fa34e5777ea560429311f7f0/plugins/market-analysis/skills/saas-valuation-compression",
+  "bundle_hash": "sha256:db64f01c38443ed50c06705b7dc984588a4faa06cebd248e6f252e824b750de8",
+  "scanner_version": "skills-guard-v1",
+  "verdict": "safe",
+  "trust_level": "community",
+  "findings": [],
+  "rules": [],
+  "scanned_at": "2026-08-16T16:00:22.218712+00:00",
+  "summary": "saas-valuation-compression: clean scan, no threats detected",
+  "fresh": true
+}

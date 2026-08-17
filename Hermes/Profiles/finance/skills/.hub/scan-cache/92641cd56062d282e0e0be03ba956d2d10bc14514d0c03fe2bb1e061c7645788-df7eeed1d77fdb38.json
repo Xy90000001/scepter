@@ -1,0 +1,13 @@
+{
+  "source": "skills-sh/deanpeters/product-manager-skills/saas-economics-efficiency-metrics",
+  "source_url": "https://github.com/deanpeters/product-manager-skills/tree/a03af68414bb0b924746c97bddf9a5057d017af7/skills/saas-economics-efficiency-metrics",
+  "bundle_hash": "sha256:92641cd56062d282e0e0be03ba956d2d10bc14514d0c03fe2bb1e061c7645788",
+  "scanner_version": "skills-guard-v1",
+  "verdict": "safe",
+  "trust_level": "community",
+  "findings": [],
+  "rules": [],
+  "scanned_at": "2026-08-16T16:00:15.466265+00:00",
+  "summary": "saas-economics-efficiency-metrics: clean scan, no threats detected",
+  "fresh": true
+}
