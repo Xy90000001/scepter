@@ -32,6 +32,11 @@ if [[ -f "$VAULT/scripts/export_sessions.py" ]]; then
     "$PY" "$VAULT/scripts/export_sessions.py" --recent-days "$RECENT_DAYS" >/dev/null 2>&1 || true
 fi
 
+# 1b. Session sync (filtered export/import)
+if [[ -f "$VAULT/scripts/session_sync.py" ]]; then
+    "$PY" "$VAULT/scripts/session_sync.py" export >/dev/null 2>&1 || true
+fi
+
 # 2. Memory sync (Android needs copy; PC uses symlink)
 if [[ -d "$HOME_DIR/.hermes/memories" && -d "$VAULT/Hermes/Memory" ]]; then
     cp -u "$HOME_DIR/.hermes/memories/MEMORY.md" "$HOME_DIR/.hermes/memories/USER.md" \
