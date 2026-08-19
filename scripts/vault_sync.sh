@@ -1,6 +1,7 @@
 #!/bin/bash
 # vault_sync.sh — Cross-platform sync for Scepter vault (Linux/macOS/Termux)
-# Order: pull --rebase -> export sessions -> sync memory -> graphify update -> commit -> push
+# Lean Vault Isolation Protocol: only heromi profile + sessions sync
+# Order: pull --rebase -> export heromi sessions -> sync memory -> graphify update -> commit -> push
 # Silent when nothing changed.
 
 set -euo pipefail
@@ -35,9 +36,9 @@ if ! git pull --rebase -q origin main 2>>"$LOG"; then
     exit 1
 fi
 
-# 1. Session export (filtered: excludes kanban/task/system/code sessions)
+# 1. Session export — ONLY heromi sessions
 if [[ -f "$VAULT/scripts/session_sync.py" ]]; then
-    "$PY" "$VAULT/scripts/session_sync.py" export --recent-days "$RECENT_DAYS" >> "$LOG" 2>&1 || true
+    "$PY" "$VAULT/scripts/session_sync.py" export --recent-days "$RECENT_DAYS" --profile heromi >> "$LOG" 2>&1 || true
 fi
 
 # 1b. Kanban tasks export (PC) / import (Termux)
@@ -51,7 +52,7 @@ if [[ -f "$VAULT/scripts/kanban_sync.py" ]]; then
     fi
 fi
 
-# 1c. Per-profile symlinks (ensure heromi only on Termux, etc.)
+# 1c. Per-profile symlinks (ensure heromi on both, xosin on Termux only)
 if [[ -f "$VAULT/scripts/setup_symlinks.sh" ]]; then
     bash "$VAULT/scripts/setup_symlinks.sh" >> "$LOG" 2>&1 || true
 fi

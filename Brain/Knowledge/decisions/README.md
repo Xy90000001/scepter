@@ -7,6 +7,7 @@
 | ADR-003 | Profile-based agent specialization (xorin, heromi, ceo, engineer, growth, finance, ops) | ACCEPTED | 2026-08-17 | xorin |
 | ADR-004 | Kanban as task routing layer (Backlog → Discovery → Spec → Build → Launch → Grow) | ACCEPTED | 2026-08-17 | xorin |
 | ADR-005 | Knowledge queries mandatory before action (graphify for code, gbrain for memory) | ACCEPTED | 2026-08-17 | xorin |
+| ADR-006 | Lean Vault Isolation Protocol (heromi cross-platform, PC profiles local) | ACCEPTED | 2026-08-19 | heromi |
 
 ---
-*Next ADR number: 006*
+*Next ADR number: 007*

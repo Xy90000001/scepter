@@ -55,6 +55,30 @@ auth.json
 *.lock
 
 # ── Runtime caches (modified by live agents, never sync) ──
+Hermes/runtime/
 Hermes/Profiles/*/cache/
 Hermes/Profiles/*/context_length_cache.yaml
 Hermes/Profiles/*/local_endpoint_probes.json
+
+# ── Vault Profile Scope (Lean Vault Isolation Protocol) ──
+# ONLY heromi/ and xosin/ are tracked in vault
+# All PC-only profiles (xorin, ceo, engineer, product, growth, finance, ops, agency-*) are LOCAL ONLY
+Hermes/Profiles/xorin/
+Hermes/Profiles/ceo/
+Hermes/Profiles/engineer/
+Hermes/Profiles/product/
+Hermes/Profiles/growth/
+Hermes/Profiles/finance/
+Hermes/Profiles/ops/
+Hermes/Profiles/agency-*/
+
+# ── Session Scope: ONLY heromi sessions sync ──
+Hermes/Sessions/xorin/
+Hermes/Sessions/xosin/
+Hermes/Sessions/ceo/
+Hermes/Sessions/engineer/
+Hermes/Sessions/product/
+Hermes/Sessions/growth/
+Hermes/Sessions/finance/
+Hermes/Sessions/ops/
+Hermes/Sessions/agency-*/

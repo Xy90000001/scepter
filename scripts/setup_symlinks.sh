@@ -1,6 +1,9 @@
 #!/bin/bash
 # setup_symlinks.sh — Create per-profile symlinks for cross-device Hermes
-# Run once on each device after cloning vault
+# Lean Vault Isolation Protocol:
+# - heromi: symlinked on BOTH PC and Termux (cross-platform)
+# - xosin: symlinked/moved to local on Termux only (staged in vault)
+# - All PC-only profiles (xorin, ceo, engineer, product, growth, finance, ops, agency-*) are LOCAL ONLY, never in vault
 
 set -euo pipefail
 
@@ -19,11 +22,9 @@ echo "Setting up symlinks for $PLATFORM..."
 
 mkdir -p "$HERMES_DIR"
 
-# 1. Memory: always symlink (PC) or copy-sync via vault_sync (Termux)
-#    On Termux, vault_sync.sh handles copying MEMORY.md/USER.md
-#    On PC, symlink for direct writes
+# 1. Memory: symlink on PC, copy-sync on Termux (handled by vault_sync.sh)
 if [[ "$PLATFORM" == "desktop" ]]; then
-    rmdir "$HERMES_DIR/memories" 2>/dev/null || true
+    rm -rf "$HERMES_DIR/memories"
     ln -sfn "$VAULT/Hermes/Memory" "$HERMES_DIR/memories"
     echo "  memories → $VAULT/Hermes/Memory (symlink)"
 fi
@@ -32,29 +33,38 @@ fi
 PROFILES_DIR="$HERMES_DIR/profiles"
 VAULT_PROFILES="$VAULT/Hermes/Profiles"
 
-rmdir "$PROFILES_DIR" 2>/dev/null || true
+rm -rf "$PROFILES_DIR"
 mkdir -p "$PROFILES_DIR"
 
-# Shared profiles (exist on all devices)
-SHARED_PROFILES=("xorin" "ceo" "engineer" "product" "growth" "finance" "ops")
-
-# Platform-specific profiles
 if [[ "$PLATFORM" == "termux" ]]; then
-    PLATFORM_PROFILES=("heromi")
+    # TERMUX: symlink heromi from vault, move xosin from vault to local
+    # heromi (cross-platform)
+    if [[ -d "$VAULT_PROFILES/heromi" ]]; then
+        ln -sfn "$VAULT_PROFILES/heromi" "$PROFILES_DIR/heromi"
+        echo "  heromi → $VAULT_PROFILES/heromi (symlink)"
+    fi
+
+    # xosin (staged in vault, moved to local on Termux)
+    if [[ -d "$VAULT_PROFILES/xosin" ]]; then
+        cp -r "$VAULT_PROFILES/xosin" "$PROFILES_DIR/xosin"
+        echo "  xosin → $PROFILES_DIR/xosin (copied from vault to local)"
+        # Optionally remove from vault after first deployment
+        # rm -rf "$VAULT_PROFILES/xosin"
+    fi
+
+    echo "  PC-only profiles (xorin, ceo, engineer, product, growth, finance, ops) are LOCAL ONLY — not linked from vault"
 else
-    PLATFORM_PROFILES=()
+    # DESKTOP (PC): symlink heromi from vault
+    if [[ -d "$VAULT_PROFILES/heromi" ]]; then
+        ln -sfn "$VAULT_PROFILES/heromi" "$PROFILES_DIR/heromi"
+        echo "  heromi → $VAULT_PROFILES/heromi (symlink)"
+    fi
+
+    # xosin is NOT linked on PC (Termux-only)
+    # PC-only profiles are already local at ~/.hermes/Profiles/
+    echo "  xosin (Termux-only) not linked on PC"
+    echo "  PC-only profiles (xorin, ceo, engineer, product, growth, finance, ops) remain local at ~/.hermes/Profiles/"
 fi
 
-ALL_PROFILES=("${SHARED_PROFILES[@]}" "${PLATFORM_PROFILES[@]}")
-
-for profile in "${ALL_PROFILES[@]}"; do
-    if [[ -d "$VAULT_PROFILES/$profile" ]]; then
-        ln -sfn "$VAULT_PROFILES/$profile" "$PROFILES_DIR/$profile"
-        echo "  $profile → $VAULT_PROFILES/$profile (symlink)"
-    else
-        echo "  WARNING: $profile not found in vault"
-    fi
-done
-
 echo "Done. Profiles in $PROFILES_DIR:"
-ls -1 "$PROFILES_DIR"
+ls -1 "$PROFILES_DIR" 2>/dev/null || echo "  (empty)"

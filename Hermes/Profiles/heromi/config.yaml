@@ -6,12 +6,8 @@ database:
   journal_mode: wal
 runtime:
   nofile_soft_limit: 4096
-  # Termux-only guard: fail fast if not running in Termux
-  pre_start_hook: |
-    if [ -z "$TERMUX_VERSION" ] && [ ! -d "/data/data/com.termux" ]; then
-      echo "ERROR: heromi profile must run inside Termux (Android). Current env: $(uname -a)" >&2
-      exit 1
-    fi
+  # Cross-platform: runs on both PC and Termux
+  pre_start_hook: ""
 agent:
   max_turns: 150
   verbose: false
