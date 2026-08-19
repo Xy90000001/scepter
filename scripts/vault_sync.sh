@@ -63,18 +63,22 @@ if [[ -d "$HOME_DIR/.hermes/memories" && -d "$VAULT/Hermes/Memory" ]]; then
           "$VAULT/Hermes/Memory/" 2>/dev/null || true
 fi
 
-# 3. Graphify update (incremental knowledge graph)
-if command -v graphify >/dev/null 2>&1; then
-    graphify update . >> "$LOG" 2>&1 || true
+# 3. Graphify update (PC ONLY — skip on Termux)
+if [[ "$PLATFORM" == "desktop" ]]; then
+    if command -v graphify >/dev/null 2>&1; then
+        graphify update . >> "$LOG" 2>&1 || true
+    fi
+
+    # 4. gbrain embed stale (PC ONLY — skip on Termux)
+    if command -v gbrain >/dev/null 2>&1; then
+        gbrain embed --stale >> "$LOG" 2>&1 || true
+    fi
+else
+    echo "[$(date)] [$PLATFORM] Skipping graphify/gbrain (PC only)" >> "$LOG"
 fi
 
-# 4. gbrain embed stale (if available)
-if command -v gbrain >/dev/null 2>&1; then
-    gbrain embed --stale >> "$LOG" 2>&1 || true
-fi
-
-# 5. STRUCTURE.md refresh
-if [[ -f "$VAULT/scripts/gen_structure.py" ]]; then
+# 5. STRUCTURE.md refresh (PC only for now)
+if [[ "$PLATFORM" == "desktop" && -f "$VAULT/scripts/gen_structure.py" ]]; then
     "$PY" "$VAULT/scripts/gen_structure.py" >> "$LOG" 2>&1 || true
 fi
 
