@@ -10,7 +10,7 @@ set -euo pipefail
 if [[ -d "/data/data/com.termux" ]]; then
     HOME_DIR="/data/data/com.termux/files/home"
     PY="$HOME_DIR/.hermes/hermes-agent/venv/bin/python"
-    VAULT="$HOME_DIR/storage/shared/scepter"
+    VAULT="$HOME_DIR/scepter"
     PLATFORM="termux"
     # Keep device awake during sync
     termux-wake-lock 2>/dev/null || true
@@ -36,19 +36,29 @@ if ! git pull --rebase -q origin main 2>>"$LOG"; then
     exit 1
 fi
 
-# 1. Session export — ONLY heromi sessions
+# 1. Session sync (mutual: export local heromi sessions, import remote heromi sessions)
 if [[ -f "$VAULT/scripts/session_sync.py" ]]; then
-    "$PY" "$VAULT/scripts/session_sync.py" export --recent-days "$RECENT_DAYS" --profile heromi >> "$LOG" 2>&1 || true
+    if [[ "$PLATFORM" == "desktop" ]]; then
+        # PC: export local heromi sessions, then import any remote heromi sessions
+        "$PY" "$VAULT/scripts/session_sync.py" export --recent-days "$RECENT_DAYS" --profile heromi >> "$LOG" 2>&1 || true
+        "$PY" "$VAULT/scripts/session_sync.py" import --profile heromi >> "$LOG" 2>&1 || true
+    else
+        # Termux: import remote heromi sessions, then export any local heromi sessions
+        "$PY" "$VAULT/scripts/session_sync.py" import --profile heromi >> "$LOG" 2>&1 || true
+        "$PY" "$VAULT/scripts/session_sync.py" export --recent-days "$RECENT_DAYS" --profile heromi >> "$LOG" 2>&1 || true
+    fi
 fi
 
-# 1b. Kanban tasks export (PC) / import (Termux)
+# 1b. Kanban tasks sync (mutual: export local changes, import remote changes)
 if [[ -f "$VAULT/scripts/kanban_sync.py" ]]; then
     if [[ "$PLATFORM" == "desktop" ]]; then
-        # PC: export tasks to JSON for sync
+        # PC: export local tasks to JSON, then import any remote changes
         "$PY" "$VAULT/scripts/kanban_sync.py" export >> "$LOG" 2>&1 || true
-    else
-        # Termux: import tasks from JSON
         "$PY" "$VAULT/scripts/kanban_sync.py" import >> "$LOG" 2>&1 || true
+    else
+        # Termux: import remote tasks, then export any local changes
+        "$PY" "$VAULT/scripts/kanban_sync.py" import >> "$LOG" 2>&1 || true
+        "$PY" "$VAULT/scripts/kanban_sync.py" export >> "$LOG" 2>&1 || true
     fi
 fi
 

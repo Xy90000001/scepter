@@ -11,6 +11,8 @@ Keeps:
 - General conversation sessions
 - Research/planning sessions
 - Decision/architecture sessions
+
+Supports --profile flag to filter by profile (for heromi-only sync).
 """
 
 import json
@@ -25,9 +27,6 @@ VAULT_ROOT = os.environ.get("VAULT_ROOT", os.path.expanduser("~/scepter"))
 VAULT = Path(VAULT_ROOT)
 SESSIONS_DIR = VAULT / "Hermes" / "Sessions"
 DB_PATH = Path("~/.hermes/state.db").expanduser()
-
-# Use correct python path for hermes venv
-HERMES_PY = Path("~/.hermes/hermes-agent/venv/bin/python").expanduser()
 
 # Keywords to EXCLUDE (low-priority sessions)
 EXCLUDE_KEYWORDS = [
@@ -52,8 +51,8 @@ def should_export(session_title: str, session_summary: str) -> bool:
     return True
 
 
-def export_sessions():
-    """Export filtered sessions from state.db to markdown files."""
+def export_sessions(profile: str = "heromi", recent_days: int = 14):
+    """Export filtered sessions from state.db to markdown files for a specific profile."""
     if not DB_PATH.exists():
         print(f"DB not found: {DB_PATH}")
         return
@@ -64,20 +63,48 @@ def export_sessions():
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     
-    # Get sessions with messages
-    cursor.execute("""
-        SELECT s.id, s.title, s.started_at, s.last_activity_at,
-               GROUP_CONCAT(m.role || ': ' || m.content, '\n\n') as transcript
-        FROM sessions s
-        LEFT JOIN messages m ON m.session_id = s.id
-        GROUP BY s.id
-        ORDER BY s.last_activity_at DESC
-    """)
+    # Check if profile_name column exists and has data
+    cursor.execute("PRAGMA table_info(sessions)")
+    columns = [row[1] for row in cursor.fetchall()]
+    has_profile = 'profile_name' in columns
+    
+    if has_profile:
+        cursor.execute("SELECT COUNT(*) FROM sessions WHERE profile_name = ?", (profile,))
+        count = cursor.fetchone()[0]
+        if count == 0:
+            # Profile column exists but no data for this profile - export all
+            has_profile = False
+    
+    if has_profile:
+        cursor.execute("""
+            SELECT s.id, s.title, s.started_at, s.last_activity_at, s.profile_name,
+                   GROUP_CONCAT(m.role || ': ' || m.content, '\n\n') as transcript
+            FROM sessions s
+            LEFT JOIN messages m ON m.session_id = s.id
+            WHERE s.profile_name = ?
+            GROUP BY s.id
+            ORDER BY s.last_activity_at DESC
+        """, (profile,))
+    else:
+        cursor.execute("""
+            SELECT s.id, s.title, s.started_at, s.last_activity_at,
+                   GROUP_CONCAT(m.role || ': ' || m.content, '\n\n') as transcript
+            FROM sessions s
+            LEFT JOIN messages m ON m.session_id = s.id
+            GROUP BY s.id
+            ORDER BY s.last_activity_at DESC
+        """)
+    
+    # Apply time filter
+    cutoff = datetime.now().timestamp() - (recent_days * 86400)
     
     exported = 0
     skipped = 0
     
     for row in cursor.fetchall():
+        if row['last_activity_at'] and row['last_activity_at'] < cutoff:
+            continue
+            
         title = row['title'] or f"session_{row['id'][:8]}"
         summary = row['transcript'][:500] if row['transcript'] else ""
         
@@ -99,8 +126,10 @@ def export_sessions():
         content = f"# {title}\n\n"
         content += f"**Session ID:** {row['id']}\n"
         content += f"**Created:** {started_at}\n"
-        content += f"**Updated:** {updated_at}\n\n"
-        content += "## Transcript\n\n"
+        content += f"**Updated:** {updated_at}\n"
+        if has_profile:
+            content += f"**Profile:** {row['profile_name']}\n"
+        content += "\n## Transcript\n\n"
         content += row['transcript'] or "*(empty)*"
         
         filepath.write_text(content, encoding='utf-8')
@@ -110,7 +139,7 @@ def export_sessions():
     print(f"Exported: {exported}, Skipped: {skipped}")
 
 
-def import_sessions():
+def import_sessions(profile: str = "heromi"):
     """Import sessions from markdown files into state.db (append only)."""
     if not DB_PATH.exists():
         print(f"DB not found: {DB_PATH}")
@@ -131,10 +160,12 @@ def import_sessions():
         
         # Extract session ID from content
         session_id = None
+        session_profile = profile  # default
         for line in content.split('\n'):
             if line.startswith("**Session ID:**"):
                 session_id = line.split("**Session ID:**")[1].strip()
-                break
+            elif line.startswith("**Profile:**"):
+                session_profile = line.split("**Profile:**")[1].strip()
         
         if not session_id:
             continue
@@ -170,7 +201,7 @@ def import_sessions():
                 model, system_prompt, compression_fallback_streak, compression_ineffective_count,
                 archived, pinned, hidden
             ) VALUES (
-                ?, ?, ?, ?, 'default',
+                ?, ?, ?, ?, ?,
                 'import', 'conversation', 0, 0,
                 0, 0, 0.0, 0.0,
                 'unknown', '', 0, 0,
@@ -181,13 +212,8 @@ def import_sessions():
             title,
             datetime.fromisoformat(created_at).timestamp() if created_at else datetime.now().timestamp(),
             datetime.fromisoformat(updated_at).timestamp() if updated_at else datetime.now().timestamp(),
+            session_profile
         ))
-        
-        # Insert messages (simplified - just add as single system message)
-        cursor.execute("""
-            INSERT INTO messages (session_id, role, content, timestamp)
-            VALUES (?, 'system', 'Imported from vault', ?)
-        """, (session_id, datetime.now().timestamp()))
         
         imported += 1
     
@@ -197,14 +223,16 @@ def import_sessions():
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python session_sync.py [export|import]")
-        sys.exit(1)
+    import argparse
     
-    if sys.argv[1] == "export":
-        export_sessions()
-    elif sys.argv[1] == "import":
-        import_sessions()
-    else:
-        print("Unknown command. Use 'export' or 'import'")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description="Export/import Hermes sessions")
+    parser.add_argument("command", choices=["export", "import"], help="Command to run")
+    parser.add_argument("--profile", default="heromi", help="Profile to filter by (default: heromi)")
+    parser.add_argument("--recent-days", type=int, default=14, help="Only export sessions from last N days")
+    
+    args = parser.parse_args()
+    
+    if args.command == "export":
+        export_sessions(profile=args.profile, recent_days=args.recent_days)
+    elif args.command == "import":
+        import_sessions(profile=args.profile)
