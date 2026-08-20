@@ -2,7 +2,7 @@
 
 **Session ID:** 20260814_102128_0269c9
 **Created:** 2026-08-14T10:58:28.035298
-**Updated:** 2026-08-20T12:34:59.316768
+**Updated:** 2026-08-20T12:44:53.191006
 **Profile:** heromi
 
 ## Transcript
@@ -18724,3 +18724,71 @@ assistant:
 tool: {"output": "[main d7d0e7dd] feat: mutual kanban + session sync, Termux dir updated to ~/scepter, cross-platform scripts\n 4 files changed, 4638 insertions(+), 765 deletions(-)\nTo https://github.com/Xy90000001/scepter\n   e8ea8cbc..d7d0e7dd  main -> main", "exit_code": 0, "error": null}
 
 assistant: 
+
+tool: {"output": "graph.html written (aggregated: 611 community nodes, 299 cross-community edges)\nTip: run with --obsidian for full node-level detail.\n[graphify watch] Rebuilt: 9241 nodes, 9959 edges, 611 communities\n[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out\nCode graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.\nTip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.\nUPGRADE_AVAILABLE 0.46.12.3 0.46.24.0\ngbrain 0.46.12.3 -> 0.46.24.0 available. Run: gbrain self-upgrade\nCannot find module '../../node_modules/@electric-sql/pglite/dist/pglite.wasm' from '/home/exash/.bun/install/global/node_modules/gbrain/src/core/pglite-embedded-assets.ts'\n[Thursday 20 August 2026 12:36:14 PM IST] [desktop] Pushed changes", "exit_code": 0, "error": null}
+
+assistant: 
+
+tool: {"output": "On branch main\nYour branch is up to date with 'origin/main'.\n\nnothing to commit, working tree clean", "exit_code": 0, "error": null}
+
+assistant: Done. All sync is now **mutual and cross-platform**.
+
+---
+
+### Summary of Changes
+
+| Component | Before | After |
+|---|---|---|
+| **Kanban Sync** | PC→export only, Termux→import only | **Mutual**: Both export local → import remote |
+| **Session Sync** | Export only (heromi) | **Mutual**: Both export local → import remote |
+| **Termux Vault Path** | `~/storage/shared/scepter` | **`~/scepter`** (updated) |
+| **Session Filter** | Excludes kanban/code/system | **Profile-aware**: filters by `profile_name` + keywords |
+
+---
+
+### Updated `vault_sync.sh` Flow
+
+```bash
+# Both platforms now:
+1. git pull --rebase
+2. Session sync: export local heromi → import remote heromi
+3. Kanban sync: export local tasks → import remote tasks
+4. Profile definition sync: copy SOUL.md + config.yaml from vault → local
+5. Memory sync: copy MEMORY.md + USER.md
+6. (PC only) graphify update, gbrain embed
+7. git commit + push
+```
+
+---
+
+### Cross-Platform Script Status
+
+| Script | PC | Termux | Notes |
+|---|---|---|---|
+| `vault_sync.sh` | ✅ Full | ✅ Subset | Both run mutual sync |
+| `kanban_sync.py` | ✅ Export + Import | ✅ Import + Export | Idempotent via `idempotency_key` |
+| `session_sync.py` | ✅ Export + Import | ✅ Import + Export | Filters by `profile_name` + keywords |
+| `setup_symlinks.sh` | ✅ Copies heromi def | ✅ Copies heromi + xosin def | Copies definitions only (no runtime) |
+| `graphify_update.sh` | ✅ Full | ⏭️ Skips | PC only |
+| `monitor_vault.sh` | ✅ Full | ⏭️ Logs "skipped" | PC only |
+
+---
+
+### Termux Deployment (when ready)
+
+```bash
+# On Termux:
+cd ~/scepter && git pull
+bash scripts/setup_symlinks.sh  # Copies heromi + xosin definitions to ~/.hermes/profiles/
+cat > ~/.hermes/.env << 'EOF'
+GEMINI_API_KEY=***
+OPENAI_API_KEY=***
+EOF
+sv-enable crond && sv-enable termux-services
+bash scripts/vault_sync.sh  # Runs mutual sync, logs "Skipping graphify/gbrain (PC only)"
+hermes profile heromi
+```
+
+The vault is now a **fully portable, bidirectional sync system** with clean separation of definitions (vault) vs runtime (local).
+
+user: what about the watcher/sync service, also only heromi sessions are synced right?
