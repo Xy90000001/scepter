@@ -2,7 +2,7 @@
 
 **Session ID:** 20260814_102128_0269c9
 **Created:** 2026-08-14T10:58:28.035298
-**Updated:** 2026-08-20T12:58:19.961428
+**Updated:** 2026-08-20T12:59:20.544817
 **Profile:** heromi
 
 ## Transcript
@@ -22669,3 +22669,7 @@ tool: {"output": "*/15 * * * * bash /home/exash/scepter/scripts/vault_sync.sh >>
 assistant: 
 
 tool: {"output": "15:Supports --profile flag to filter by profile (for heromi-only sync).\n54:def export_sessions(profile: str = \"heromi\", recent_days: int = 14):\n55:    \"\"\"Export filtered sessions from state.db to markdown files for a specific profile.\"\"\"\n66:    # Check if profile_name column exists and has data\n69:    has_profile = 'profile_name' in columns\n71:    if has_profile:\n72:        cursor.execute(\"SELECT COUNT(*) FROM sessions WHERE profile_name = ?\", (profile,))\n75:            # Profile column exists but no data for this profile - export all\n76:            has_profile = False\n78:    if has_profile:\n80:            SELECT s.id, s.title, s.started_at, s.last_activity_at, s.profile_name,\n84:            WHERE s.profile_name = ?\n87:        \"\"\", (profile,))\n130:        if has_profile:\n131:            content += f\"**Profile:** {row['profile_name']}\\n\"\n142:def import_sessions(profile: str = \"heromi\"):\n163:        session_profile = profile  # default\n168:                session_profile = line.split(\"**Profile:**\")[1].strip()\n198:                id, title, started_at, last_activity_at, profile_name,\n215:            session_profile", "exit_code": 0, "error": null}
+
+assistant: 
+
+tool: {"output": "40:if [[ -f \"$VAULT/scripts/session_sync.py\" ]]; then\n43:        \"$PY\" \"$VAULT/scripts/session_sync.py\" export --recent-days \"$RECENT_DAYS\" --profile heromi >> \"$LOG\" 2>&1 || true\n44:        \"$PY\" \"$VAULT/scripts/session_sync.py\" import --profile heromi >> \"$LOG\" 2>&1 || true\n47:        \"$PY\" \"$VAULT/scripts/session_sync.py\" import --profile heromi >> \"$LOG\" 2>&1 || true\n48:        \"$PY\" \"$VAULT/scripts/session_sync.py\" export --recent-days \"$RECENT_DAYS\" --profile heromi >> \"$LOG\" 2>&1 || true", "exit_code": 0, "error": null}
