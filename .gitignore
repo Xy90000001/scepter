@@ -59,6 +59,15 @@ Hermes/runtime/
 Hermes/Profiles/*/cache/
 Hermes/Profiles/*/context_length_cache.yaml
 Hermes/Profiles/*/local_endpoint_probes.json
+Hermes/Profiles/*/models_dev_cache.json
+Hermes/Profiles/*/ollama_cloud_models_cache.json
+Hermes/Profiles/*/provider_models_cache.json
+Hermes/Profiles/*/.skills_prompt_snapshot.json
+Hermes/Profiles/*/.update_check
+Hermes/Profiles/*/skills/.bundled_manifest
+Hermes/Profiles/*/skills/.curator_state
+Hermes/Profiles/*/skills/.termux_bundled_sync_stamp
+Hermes/Profiles/*/.hermes_history
 
 # ── Vault Profile Scope (Lean Vault Isolation Protocol) ──
 # ONLY heromi/ and xosin/ are tracked in vault

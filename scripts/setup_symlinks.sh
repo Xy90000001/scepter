@@ -1,9 +1,10 @@
 #!/bin/bash
 # setup_symlinks.sh — Create per-profile symlinks for cross-device Hermes
 # Lean Vault Isolation Protocol:
-# - heromi: symlinked on BOTH PC and Termux (cross-platform)
-# - xosin: symlinked/moved to local on Termux only (staged in vault)
-# - All PC-only profiles (xorin, ceo, engineer, product, growth, finance, ops, agency-*) are LOCAL ONLY, never in vault
+# - Profile DEFINITIONS (SOUL.md, config.yaml) in vault
+# - Runtime copies to local ~/.hermes/Profiles/<name>/
+# - Runtime files (state.db, caches, sessions) stay local only
+# - xosin: copied from vault to local on Termux only
 
 set -euo pipefail
 
@@ -18,53 +19,49 @@ else
     PLATFORM="desktop"
 fi
 
-echo "Setting up symlinks for $PLATFORM..."
+echo "Setting up profiles for $PLATFORM..."
 
-mkdir -p "$HERMES_DIR"
+mkdir -p "$HERMES_DIR/profiles"
 
-# 1. Memory: symlink on PC, copy-sync on Termux (handled by vault_sync.sh)
-if [[ "$PLATFORM" == "desktop" ]]; then
-    rm -rf "$HERMES_DIR/memories"
-    ln -sfn "$VAULT/Hermes/Memory" "$HERMES_DIR/memories"
-    echo "  memories → $VAULT/Hermes/Memory (symlink)"
-fi
-
-# 2. Profiles: per-profile symlinks based on platform
-PROFILES_DIR="$HERMES_DIR/profiles"
 VAULT_PROFILES="$VAULT/Hermes/Profiles"
+LOCAL_PROFILES="$HERMES_DIR/profiles"
 
-rm -rf "$PROFILES_DIR"
-mkdir -p "$PROFILES_DIR"
+# Function: copy profile definition from vault to local (SOUL.md + config.yaml only)
+sync_profile_def() {
+    local profile="$1"
+    local src="$VAULT_PROFILES/$profile"
+    local dst="$LOCAL_PROFILES/$profile"
+    
+    if [[ ! -d "$src" ]]; then
+        echo "  WARNING: $profile not found in vault"
+        return 1
+    fi
+    
+    mkdir -p "$dst"
+    
+    # Copy only definition files (not runtime)
+    for f in SOUL.md config.yaml; do
+        if [[ -f "$src/$f" ]]; then
+            cp "$src/$f" "$dst/$f"
+        fi
+    done
+    
+    echo "  $profile definition synced from vault"
+}
 
 if [[ "$PLATFORM" == "termux" ]]; then
-    # TERMUX: symlink heromi from vault, move xosin from vault to local
-    # heromi (cross-platform)
-    if [[ -d "$VAULT_PROFILES/heromi" ]]; then
-        ln -sfn "$VAULT_PROFILES/heromi" "$PROFILES_DIR/heromi"
-        echo "  heromi → $VAULT_PROFILES/heromi (symlink)"
-    fi
-
-    # xosin (staged in vault, moved to local on Termux)
-    if [[ -d "$VAULT_PROFILES/xosin" ]]; then
-        cp -r "$VAULT_PROFILES/xosin" "$PROFILES_DIR/xosin"
-        echo "  xosin → $PROFILES_DIR/xosin (copied from vault to local)"
-        # Optionally remove from vault after first deployment
-        # rm -rf "$VAULT_PROFILES/xosin"
-    fi
-
-    echo "  PC-only profiles (xorin, ceo, engineer, product, growth, finance, ops) are LOCAL ONLY — not linked from vault"
+    # TERMUX: sync heromi + xosin definitions from vault
+    sync_profile_def "heromi"
+    sync_profile_def "xosin"
+    
+    echo "  PC-only profiles (xorin, ceo, engineer, product, growth, finance, ops) are LOCAL ONLY"
 else
-    # DESKTOP (PC): symlink heromi from vault
-    if [[ -d "$VAULT_PROFILES/heromi" ]]; then
-        ln -sfn "$VAULT_PROFILES/heromi" "$PROFILES_DIR/heromi"
-        echo "  heromi → $VAULT_PROFILES/heromi (symlink)"
-    fi
-
-    # xosin is NOT linked on PC (Termux-only)
-    # PC-only profiles are already local at ~/.hermes/Profiles/
-    echo "  xosin (Termux-only) not linked on PC"
-    echo "  PC-only profiles (xorin, ceo, engineer, product, growth, finance, ops) remain local at ~/.hermes/Profiles/"
+    # DESKTOP: sync heromi definition from vault
+    sync_profile_def "heromi"
+    
+    echo "  xosin (Termux-only) not synced on PC"
+    echo "  PC-only profiles (xorin, ceo, engineer, product, growth, finance, ops) remain local"
 fi
 
-echo "Done. Profiles in $PROFILES_DIR:"
-ls -1 "$PROFILES_DIR" 2>/dev/null || echo "  (empty)"
+echo "Done. Local profiles in $LOCAL_PROFILES:"
+ls -1 "$LOCAL_PROFILES" 2>/dev/null || echo "  (empty)"

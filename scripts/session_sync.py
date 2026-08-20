@@ -26,6 +26,9 @@ VAULT = Path(VAULT_ROOT)
 SESSIONS_DIR = VAULT / "Hermes" / "Sessions"
 DB_PATH = Path("~/.hermes/state.db").expanduser()
 
+# Use correct python path for hermes venv
+HERMES_PY = Path("~/.hermes/hermes-agent/venv/bin/python").expanduser()
+
 # Keywords to EXCLUDE (low-priority sessions)
 EXCLUDE_KEYWORDS = [
     "kanban", "task", "dispatch", "worker",
