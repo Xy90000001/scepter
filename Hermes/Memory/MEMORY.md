@@ -8,12 +8,12 @@ User wants orchestrator pattern with specialist agents: coder (aider/claude-code
 §
 Building 'second brain' (Obsidian vault 'scepter') synced across Android (Termux/Hermes) and PC via private GitHub repo Xy90000001/scepter. Centralized memory so any agent on any device shares context. Local proxy at localhost:20128/v1 (auto/* aliases); Graphify OpenAI client hangs on proxy but direct API works. Scepter vault: only agentic source/config/memory/session-markdown committed; generated artifacts gitignored. gbrain global via ~/.bun/bin/gbrain. Memory symlinks: ~/.hermes/memories → ~/scepter/Hermes/Memory (PC); Android uses copy
 §
-Agentic OS to run SaaS from scratch: CEO orchestrator (xorin) delegates to specialists (engineer, product, growth, finance, ops, ceo) via kanban. heromi is mobile-only (Termux). No crons/projects until product decided. Cross-platform: all scripts work on Linux PC and Android Termux. Profiles live in vault (Hermes/Profiles/) and symlink to ~/.hermes/profiles/. Environment guards enforce heromi=Termux-only, xorin=PC-only. Kanban tasks sync via JSON (kanban_sync.py). Per-profile symlinks for granular platform control
+Agentic OS profile architecture (verified 2026-08-20): heromi = primary personal assistant on BOTH PC and Termux (no platform guard, brain-dump + dispatch hub); xosin = Termux-only IT Ops (vault-staged, pre_start_hook guard); xorin = PC-only IT Ops; ceo/engineer/product/growth/finance/ops = PC-only execution suite (local-only, not in vault). Vault contains only: heromi + xosin profiles, Hermes/Memory, Brain/Knowledge, PARA folders, scripts, heromi session exports.
 §
 User wants execution plan listed before any multi-step action
 §
-User wants cross-device profile management with platform-specific guards (heromi only on Termux, xorin/engineer only on PC)
+User wants cross-device profile management with platform-specific guards (heromi = BOTH PC+Termux no guard; xosin = Termux-only; xorin/engineer/etc = PC-only)
 §
-User wants kanban task sync across devices with environment enforcement (tasks for heromi blocked on PC)
+User wants kanban task sync across devices with environment enforcement (heromi runs on both PC+Termux; xosin tasks blocked on PC; PC specialist tasks blocked on Termux)
 §
 User prefers per-profile symlinks over full directory symlink for granular platform control
