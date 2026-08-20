@@ -50,10 +50,10 @@ Each profile has a `SOUL.md` defining its role, tools, and delegation authority.
 
 ## Sync Behavior
 
-- `scripts/vault_sync_desktop.sh` runs every 15 min (cronie): pull --rebase → export sessions → sync memory → STRUCTURE.md → graphify update → commit (timestamped, skip if clean) → push.
+- `scripts/vault_sync.sh` runs every 15 min (cronie): pull --rebase → export heromi sessions → sync memory → STRUCTURE.md → graphify update (PC only) → gbrain embed (PC only) → commit (timestamped, skip if clean) → push.
 - Hermes memory syncs from `~/.hermes/memories` — do not hand-edit `Hermes/Memory/` on Android; edits there get overwritten by the next sync.
 - `Hermes/Sessions/` is generated — never edit by hand.
-- `graphify update .` runs on every sync to keep code graph current.
+- `graphify update .` and `gbrain embed` run on every sync **on PC only**; Termux skips these.
 
 ## Token & Context Optimization Rules (MANDATORY)
 

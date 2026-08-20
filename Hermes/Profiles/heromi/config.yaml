@@ -6,9 +6,6 @@ database:
   journal_mode: wal
 runtime:
   nofile_soft_limit: 4096
-  pre_start_hook: "if [ -z \"$TERMUX_VERSION\" ] && [ ! -d \"/data/data/com.termux\"\
-    \ ]; then\n  echo \"ERROR: heromi profile must run inside Termux (Android). Current\
-    \ env: $(uname -a)\" >&2\n  exit 1\nfi\n"
 agent:
   max_turns: 150
   verbose: false
@@ -67,7 +64,6 @@ display:
   busy_input_mode: interrupt
   bell_on_complete: false
   show_reasoning: true
-  reasoning_full: true
   streaming: true
   skin: default
   interim_assistant_messages: true
@@ -203,23 +199,17 @@ custom_providers:
       - auto/coding:cheap
       - auto/coding:free
       - auto/coding:pro
-      - auto/coding:reliable
       - auto/reasoning
       - auto/reasoning:pro
       - auto/vision
       - auto/multimodal
       - auto/glm
-      - auto/minimax
-      - auto/mimo
-      - auto/zai
-      - auto/gemma
       - auto/llama
       - auto/gemini
       - graph
       - graph-copy
       - pepper/pepper-1
       - ddgw/gpt-5.4-mini
-      - ddgw/gpt-5.4-nano
       - ddgw/claude-haiku-4-5
       - ddgw/mistral-small-2603
       - ddgw/tinfoil/gpt-oss-120b
@@ -234,8 +224,6 @@ custom_providers:
       - aug/haiku4.5
       - aug/sonnet4.5
       - aug/sonnet4.6-500k
-      - aug/sonnet5-high
-      - aug/sonnet5-500k
       - aug/opus4.5
       - aug/opus4.6
       - aug/opus4.6-500k

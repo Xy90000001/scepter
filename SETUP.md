@@ -13,7 +13,7 @@ The vault lives in shared storage so **every device sees the same folder**:
 
 ### Same device (this phone)
 1. Install **Obsidian** from the Play Store.
-2. Open Obsidian → **Open folder as vault** → pick `scepter` from internal storage.
+2. Open Obsidian → **Open folder as vault** → pick `scepter` from internal storage (`~/scepter` in Termux, `/storage/emulated/0/scepter` in file manager).
 3. Install **Obsidian Git** plugin: Settings → Community plugins → Browse → "Obsidian Git".
 4. Configure Obsidian Git:
    - **Authentication:** username `Xy90000001`, password = a **Personal Access Token**.
@@ -25,7 +25,7 @@ The vault lives in shared storage so **every device sees the same folder**:
 
 ### A different phone
 1. Install **MGit** (or clone via Termux): clone `https://github.com/Xy90000001/scepter.git`
-   into internal storage.
+   into internal storage (`~/scepter`).
 2. Open the cloned folder as an Obsidian vault, install Obsidian Git as above.
 
 ---
@@ -76,15 +76,19 @@ adapt, never assume it's current.
 
 | Trigger | What runs |
 |---|---|
-| Every 15 min (cronie `crond` on Termux) | `scripts/vault_sync.sh`: pull --rebase → session export → memory sync → graphify update → gbrain embed → commit → push |
+| Every 15 min (cronie `crond` on Termux) | `scripts/vault_sync.sh`: pull --rebase → session export (heromi) → memory sync → graphify update (PC) → gbrain embed (PC) → commit → push |
 | Obsidian Git (phone/PC) | Pull on startup, push on save — keeps `00–04`, `Brain/` + memory in sync |
-| Manual | `bash ~/storage/shared/scepter/scripts/vault_sync.sh` (Termux) or `~/scepter/scripts/vault_sync.sh` (PC) |
+| Manual | `bash ~/scepter/scripts/vault_sync.sh` (Termux) or `bash ~/scepter/scripts/vault_sync.sh` (PC) |
 
 **Memory lives in the vault.** How the live files get there differs by platform:
 - **PC (symlink):** `~/.hermes/memories` → `~/scepter/Hermes/Memory` — Hermes writes straight into the repo.
 - **Android (sync):** live files stay in `~/.hermes/memories` because Android shared storage can't `flock` (FUSE limitation) — `vault_sync.sh` copies them into `Hermes/Memory/` every 15 min. Don't hand-edit `Hermes/Memory/` on Android; edits on PC sync down fine.
 
 **Profiles live in the vault too:** `~/scepter/Hermes/Profiles/` → symlinked to `~/.hermes/profiles/` on each device. SOUL.md changes sync via git.
+
+**Tools per platform:**
+- **PC:** `graphify`, `gbrain`, `hermes` all available
+- **Termux:** `hermes` only; `graphify` and `gbrain` are **skipped** (PC-only)
 
 ---
 
