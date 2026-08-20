@@ -2,7 +2,7 @@
 
 **Session ID:** 20260814_102128_0269c9
 **Created:** 2026-08-14T10:58:28.035298
-**Updated:** 2026-08-20T12:59:20.544817
+**Updated:** 2026-08-20T13:00:20.635658
 **Profile:** heromi
 
 ## Transcript
@@ -22673,3 +22673,92 @@ tool: {"output": "15:Supports --profile flag to filter by profile (for heromi-on
 assistant: 
 
 tool: {"output": "40:if [[ -f \"$VAULT/scripts/session_sync.py\" ]]; then\n43:        \"$PY\" \"$VAULT/scripts/session_sync.py\" export --recent-days \"$RECENT_DAYS\" --profile heromi >> \"$LOG\" 2>&1 || true\n44:        \"$PY\" \"$VAULT/scripts/session_sync.py\" import --profile heromi >> \"$LOG\" 2>&1 || true\n47:        \"$PY\" \"$VAULT/scripts/session_sync.py\" import --profile heromi >> \"$LOG\" 2>&1 || true\n48:        \"$PY\" \"$VAULT/scripts/session_sync.py\" export --recent-days \"$RECENT_DAYS\" --profile heromi >> \"$LOG\" 2>&1 || true", "exit_code": 0, "error": null}
+
+assistant: ---
+
+### Watcher/Sync Service Status
+
+| Component | Status | Details |
+|---|---|---|
+| **`vault-watcher.service`** | ✅ **Active & Running** (systemd) | Watches vault dirs via `inotifywait`, triggers `vault_sync.sh` on changes (5s debounce) |
+| **`vault_sync.sh` cron** | ✅ **Every 15 min** | `*/15 * * * *` → fallback if watcher misses |
+| **`monitor_vault.sh` cron** | ✅ **Hourly** | `0 * * * *` → checks vault-watcher, gbrain, graphify |
+| **Log** | `~/.vault_watch.log` | Shows real-time sync triggers |
+
+**Running now:** `inotifywait` monitoring 8 paths in vault, auto-syncing on file changes.
+
+---
+
+### Sessions Sync — Yes, Only `heromi`
+
+| Sync Direction | Filter |
+|---|---|
+| **Export (PC → Vault)** | `--profile heromi` + keyword exclusion (kanban, code, system, etc.) |
+| **Import (Vault → PC)** | `--profile heromi` — reads `**Profile:** heromi` from markdown |
+| **Export (Termux → Vault)** | `--profile heromi` + keyword exclusion |
+| **Import (Vault → Termux)** | `--profile heromi` |
+
+**Confirmed in `vault_sync.sh`:**
+```bash
+"$PY" "$VAULT/scripts/session_sync.py" export --recent-days "$RECENT_DAYS" --profile heromi
+"$PY" "$VAULT/scripts/session_sync.py" import --profile heromi
+```
+
+---
+
+### Current Sync Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    VAULT (GitHub)                           │
+│  Hermes/Sessions/heromi/*.md   ← ONLY heromi sessions      │
+│  01_Tasks/kanban_tasks.json    ← ALL tasks (cross-device)  │
+│  Hermes/Memory/                ← MEMORY.md + USER.md       │
+└─────────────────────────────────────────────────────────────┘
+           ▲                    ▲                    ▲
+           │ inotifywait        │ cron (15m)         │ cron (1h)
+           │ (watcher)          │ (vault_sync)       │ (monitor)
+    ┌──────┴──────┐      ┌──────┴──────┐      ┌──────┴──────┐
+    │   PC        │      │   PC        │      │   PC        │
+    │  ~.hermes   │◄────►│  ~.hermes   │      │  ~.hermes   │
+    │  state.db   │      │  state.db   │      │  state.db   │
+    └─────────────┘      └─────────────┘      └─────────────┘
+            │                    │                    │
+            │                    │                    │
+    ┌───────┴────────┐           │                    │
+    │    Termux      │           │                    │
+    │  ~/scepter     │           │                    │
+    │  state.db      │◄──────────┘                    │
+    └────────────────┘                                │
+```
+
+---
+
+### What's Not Synced
+
+| Not Synced | Reason |
+|---|---|
+| Other profile sessions (`xorin`, `ceo`, `engineer`, etc.) | Lean Vault Isolation Protocol |
+| `state.db` / `kanban.db` | SQLite — binary, conflicts |
+| Runtime caches, logs, `projects.db` | Gitignored in `.gitignore` |
+| PC-only profiles | Local only (`~/.hermes/Profiles/`) |
+
+---
+
+### Verification
+
+```bash
+# Watcher running?
+systemctl --user status vault-watcher.service
+
+# Recent syncs?
+tail -5 ~/.vault_watch.log
+
+# Cron jobs?
+crontab -l
+
+# Session filter test?
+python3 scripts/session_sync.py export --profile heromi --recent-days 1
+```
+
+All systems operational.
