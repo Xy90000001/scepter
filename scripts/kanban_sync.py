@@ -16,6 +16,8 @@ VAULT = Path(VAULT_ROOT)
 TASKS_FILE = VAULT / "01_Tasks" / "kanban_tasks.json"
 DB_PATH = Path("~/.hermes/kanban.db").expanduser()
 
+# Valid assignees (current profile architecture)
+VALID_ASSIGNEES = {"heromi", "xosin", "xorin", "ceo", "engineer", "product", "growth", "finance", "ops"}
 
 def export_tasks():
     """Export all kanban tasks from state.db to JSON file."""
@@ -71,7 +73,7 @@ def export_tasks():
 
 
 def import_tasks():
-    """Import kanban tasks from JSON file into state.db (upsert by idempotency_key)."""
+    """Import kanban tasks from JSON file into state.db (upsert by idempotency_key, then by id)."""
     if not DB_PATH.exists():
         print(f"DB not found: {DB_PATH}")
         return
@@ -83,53 +85,108 @@ def import_tasks():
     data = json.loads(TASKS_FILE.read_text())
     tasks = data.get("tasks", [])
 
+    # Filter out tasks with invalid assignees (only keep valid ones)
+    valid_tasks = []
+    for task in tasks:
+        assignee = task.get("assignee")
+        if assignee in VALID_ASSIGNEES or not assignee:
+            valid_tasks.append(task)
+        else:
+            print(f"  Skipping task with invalid assignee: {task['id']} (assignee: {assignee})")
+
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     imported = 0
+    updated = 0
     skipped = 0
 
-    for task in tasks:
-        # Check if task already exists (by idempotency_key)
-        cursor.execute("SELECT id FROM tasks WHERE idempotency_key = ?", (task["idempotency_key"],))
-        existing = cursor.fetchone()
-
-        if existing:
-            # Update existing
-            cursor.execute("""
-                UPDATE tasks SET
-                    title = ?, body = ?, status = ?, assignee = ?, priority = ?,
-                    started_at = ?, completed_at = ?, claim_lock = ?, block_kind = ?,
-                    session_id = ?, skills = ?, model_override = ?, provider_override = ?
-                WHERE idempotency_key = ?
-            """, (
-                task["title"], task["body"], task["status"], task["assignee"],
-                task["priority"], task["started_at"], task["completed_at"],
-                task["claim_lock"], task["block_kind"], task["session_id"],
-                task["skills"], task["model_override"], task["provider_override"],
-                task["idempotency_key"]
-            ))
-            skipped += 1
+    for task in valid_tasks:
+        # Try upsert by idempotency_key first (if present)
+        if task.get("idempotency_key"):
+            cursor.execute("SELECT id FROM tasks WHERE idempotency_key = ?", (task["idempotency_key"],))
+            existing = cursor.fetchone()
+            
+            if existing:
+                # Update existing by idempotency_key
+                cursor.execute("""
+                    UPDATE tasks SET
+                        title = ?, body = ?, status = ?, assignee = ?, priority = ?,
+                        started_at = ?, completed_at = ?, claim_lock = ?, block_kind = ?,
+                        session_id = ?, skills = ?, model_override = ?, provider_override = ?
+                    WHERE idempotency_key = ?
+                """, (
+                    task["title"], task["body"], task["status"], task["assignee"], task["priority"],
+                    task["started_at"], task["completed_at"], task["claim_lock"], task["block_kind"],
+                    task["session_id"], task["skills"], task["model_override"], task["provider_override"],
+                    task["idempotency_key"]
+                ))
+                updated += 1
+            else:
+                # Insert new
+                cursor.execute("""
+                    INSERT INTO tasks (
+                        id, title, body, status, assignee, priority, idempotency_key,
+                        created_at, started_at, completed_at, claim_lock, block_kind,
+                        session_id, skills, model_override, provider_override
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    task["id"], task["title"], task["body"], task["status"],
+                    task["assignee"], task["priority"], task["idempotency_key"],
+                    task["created_at"], task["started_at"], task["completed_at"],
+                    task["claim_lock"], task["block_kind"], task["session_id"],
+                    task["skills"], task["model_override"], task["provider_override"]
+                ))
+                imported += 1
         else:
-            # Insert new
-            cursor.execute("""
-                INSERT INTO tasks (
-                    id, title, body, status, assignee, priority, idempotency_key,
-                    created_at, started_at, completed_at, claim_lock, block_kind,
-                    session_id, skills, model_override, provider_override
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (
-                task["id"], task["title"], task["body"], task["status"],
-                task["assignee"], task["priority"], task["idempotency_key"],
-                task["created_at"], task["started_at"], task["completed_at"],
-                task["claim_lock"], task["block_kind"], task["session_id"],
-                task["skills"], task["model_override"], task["provider_override"]
-            ))
-            imported += 1
+            # No idempotency_key — try by id
+            cursor.execute("SELECT id FROM tasks WHERE id = ?", (task["id"],))
+            existing = cursor.fetchone()
+            
+            if existing:
+                # Update existing by id
+                cursor.execute("""
+                    UPDATE tasks SET
+                        title = ?, body = ?, status = ?, assignee = ?, priority = ?,
+                        started_at = ?, completed_at = ?, claim_lock = ?, block_kind = ?,
+                        session_id = ?, skills = ?, model_override = ?, provider_override = ?,
+                        idempotency_key = ?
+                    WHERE id = ?
+                """, (
+                    task["title"], task["body"], task["status"], task["assignee"], task["priority"],
+                    task["started_at"], task["completed_at"], task["claim_lock"], task["block_kind"],
+                    task["session_id"], task["skills"], task["model_override"], task["provider_override"],
+                    task.get("idempotency_key"),
+                    task["id"]
+                ))
+                updated += 1
+            else:
+                # Insert new
+                cursor.execute("""
+                    INSERT INTO tasks (
+                        id, title, body, status, assignee, priority, idempotency_key,
+                        created_at, started_at, completed_at, claim_lock, block_kind,
+                        session_id, skills, model_override, provider_override
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    task["id"], task["title"], task["body"], task["status"],
+                    task["assignee"], task["priority"], task.get("idempotency_key"),
+                    task["created_at"], task["started_at"], task["completed_at"],
+                    task["claim_lock"], task["block_kind"], task["session_id"],
+                    task["skills"], task["model_override"], task["provider_override"]
+                ))
+                imported += 1
+
+    # Clean up orphaned tasks (invalid assignees) from local DB
+    placeholders = ",".join(["?"] * len(VALID_ASSIGNEES))
+    cursor.execute(f"DELETE FROM tasks WHERE assignee NOT IN ({placeholders})", list(VALID_ASSIGNEES))
+    deleted = cursor.rowcount
+    if deleted:
+        print(f"  Cleaned {deleted} orphaned tasks with invalid assignees")
 
     conn.commit()
     conn.close()
-    print(f"Imported: {imported}, Updated: {skipped}")
+    print(f"Imported: {imported}, Updated: {updated}, Skipped: {skipped}")
 
 
 if __name__ == "__main__":
