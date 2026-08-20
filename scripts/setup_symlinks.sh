@@ -13,7 +13,7 @@ HERMES_DIR="$HOME/.hermes"
 # Detect platform
 if [[ -d "/data/data/com.termux" ]] || [[ -n "${TERMUX_VERSION:-}" ]]; then
     PLATFORM="termux"
-    VAULT="${VAULT_ROOT:-$HOME/storage/shared/scepter}"
+    VAULT="${VAULT_ROOT:-$HOME/scepter}"
 else
     PLATFORM="desktop"
 fi

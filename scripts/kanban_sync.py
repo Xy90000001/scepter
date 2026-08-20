@@ -11,7 +11,7 @@ from datetime import datetime
 from pathlib import Path
 
 # Config (portable: override with VAULT_ROOT env var)
-VAULT_ROOT = os.environ.get("VAULT_ROOT", "/home/exash/scepter")
+VAULT_ROOT = os.environ.get("VAULT_ROOT", os.path.expanduser("~/scepter"))
 VAULT = Path(VAULT_ROOT)
 TASKS_FILE = VAULT / "01_Tasks" / "kanban_tasks.json"
 DB_PATH = Path("~/.hermes/kanban.db").expanduser()

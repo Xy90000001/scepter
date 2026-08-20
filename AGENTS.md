@@ -2,103 +2,58 @@
 
 This vault is the persistent, portable second brain for an agentic OS that runs a SaaS business. Any agent operating here must follow these conventions.
 
-## Lean Vault Isolation Protocol
+## Three-Layer Memory Architecture
 
-### Vault Scope (Git-Tracked)
-| Component | Location | Synced? |
-|---|---|---|
-| **Cross-Platform Profile** | `Hermes/Profiles/heromi/` | ✅ SOUL.md + config.yaml + skills |
-| **Termux-Staged Profile** | `Hermes/Profiles/xosin/` | ✅ SOUL.md + config.yaml (staged for Termux deployment) |
-| **Runtime Memory** | `Hermes/Memory/{MEMORY.md,USER.md}` | ✅ Symlink (PC) / Copy-sync (Android) |
-| **Knowledge Base** | `Brain/Knowledge/` | ✅ Frameworks, templates, ADRs |
-| **PARA Folders** | `00_Inbox/`, `01_Tasks/`, `02_Projects/`, `03_Outreach/` | ✅ |
-| **Scripts** | `scripts/` | ✅ |
-| **Config Reference** | `Hermes/Config/config.yaml` | ✅ |
-| **Heromi Sessions** | `Hermes/Sessions/heromi/` | ✅ Markdown exports |
+| Layer | Location | Injected? | Queried? | Purpose |
+|---|---|---|---|---|
+| **SOUL (Identity)** | `~/.hermes/profiles/<name>/SOUL.md` | ✅ Profile load | ❌ | Who the agent is, authority, tools, delegation targets |
+| **Runtime Memory** | `~/scepter/Hermes/Memory/{MEMORY.md,USER.md}` | ✅ Every session | ❌ | User facts, preferences, session continuity |
+| **Knowledge Base** | `~/scepter/Brain/Knowledge/` | ❌ | ✅ On demand | Frameworks, templates, decisions, references |
 
-### Local-Only (Never Git-Tracked)
-| Component | Location | Device |
-|---|---|---|
-| **PC IT Ops** | `~/.hermes/Profiles/xorin/` | PC |
-| **PC Execution Suite** | `~/.hermes/Profiles/{ceo,engineer,product,growth,finance,ops,agency-*}/` | PC |
-| **Termux IT Ops** | `~/.hermes/Profiles/xosin/` | Termux |
-| **Session DBs** | `~/.hermes/state.db`, `~/.hermes/kanban.db` | Both |
-| **Runtime Caches** | `Hermes/runtime/` | Both |
-| **Secrets** | `~/.hermes/.env` | Both |
+See `Brain/Knowledge/decisions/ADR-002-three-layer-memory.md` for full details.
 
----
+## Folder Map
+
+| Folder | Purpose |
+|---|---|
+| `00_Inbox/` | Capture everything first — sort later |
+| `01_Tasks/` | Kanban task board (Hermes `/kanban` + `kanban.md` mirror) |
+| `02_Projects/` | Active projects — one folder per project with `spec.md`, `tasks.md`, `log.md` |
+| `03_Outreach/` | Lead tracking + templates |
+| `Brain/Knowledge/` | **Frameworks, templates, decisions, references** — queried via gbrain/graphify |
+| `Hermes/` | Agent layer: `Memory/`, `Sessions/`, `SOUL.md` (reference), `Config/` |
+| `scripts/` | Sync/export tooling (portable, versioned) |
 
 ## Agent Profiles (Hermes)
 
-### Cross-Platform (Synced via Vault)
 | Profile | Role | Device |
 |---|---|---|
-| `heromi` | **Primary Personal Assistant** | PC + Termux |
-| `xosin` | **Termux IT System Ops** (staged) | Termux only |
-
-### PC-Only (Local, Not in Vault)
-| Profile | Role | Device |
-|---|---|---|
-| `xorin` | PC IT System Ops | PC |
+| `xorin` | CEO Orchestrator | PC |
+| `heromi` | Mobile Node | Termux |
 | `ceo` | Chief Executive | PC |
 | `engineer` | Lead Engineer | PC |
 | `product` | Product Manager | PC |
 | `growth` | Growth Lead | PC |
 | `finance` | Finance Lead | PC |
 | `ops` | Platform Engineer | PC |
-| `agency-*` | Specialized Agency (future) | PC |
 
----
-
-## Dispatch Architecture
-
-```
-Human Request
-      ↓
-┌─────────────────────────────────────────────┐
-│  heromi (Primary Assistant) — Runs on PC &  │
-│  Termux. Captures intent, creates kanban    │
-│  tasks, dispatches to specialists.          │
-└─────────────────────────────────────────────┘
-      ↓                    ↓                    ↓
-   System PC          System Termux           SaaS Execution (PC)
-      ↓                    ↓                    ↓
-  xorin (PC IT)       xosin (Termux IT)    ceo, engineer, product,
-                                                growth, finance, ops,
-                                                agency-*
-```
-
-### Dispatch Rules (MANDATORY)
-
-1. **Human request received** → `heromi` analyzes intent
-2. **System maintenance (PC)** → Create task with `assignee: xorin`
-3. **System maintenance (Termux)** → Create task with `assignee: xosin`
-4. **SaaS execution work** → Create task with appropriate PC profile assignee
-5. **Tasks for PC profiles** sit in `pending` until PC instance claims them
-4. **Tasks for `xosin`** sit in `pending` until Termux instance claims them
-
----
+Each profile has a `SOUL.md` defining its role, tools, and delegation authority. See `Brain/Knowledge/decisions/ADR-003-profile-agents.md`.
 
 ## Task Rules
 
 - **Kanban workflow:** Backlog → Discovery → Validating → Spec'ing → Building → Launching → Growing → Done
-- **`heromi` creates all tasks** — it's the dispatcher
-- **Task transport:** `01_Tasks/kanban_tasks.json` (Git-synced JSON)
-- **Local execution:** `hermes kanban` tools operate on local `kanban.db`
-- **Sync:** `vault_sync.sh` runs `kanban_sync.py` export (PC) / import (Termux) every 15 min
+- **Only orchestrators (`xorin`, `ceo`) create tasks for specialists** — they own the pipeline
+- **Specialists are leaf agents** — they execute, don't delegate further
+- **Every task must include:** goal, context (linked docs, decisions), success criteria, assignee (profile name)
+- **Done requires verification** — orchestrator checks output before closing
 - In `01_Tasks/kanban.md` (Obsidian mirror): `- [ ]` = todo, `- [ ] #next` = next up, `- [x]` = done
-
----
 
 ## Sync Behavior
 
-- `scripts/vault_sync.sh` runs every 15 min (cronie): pull --rebase → export **heromi** sessions → sync memory → graphify update → commit (timestamped, skip if clean) → push.
-- Hermes memory syncs from `~/.hermes/memories` — symlink on PC, copy-sync on Android.
-- `Hermes/Sessions/heromi/` is generated — never edit by hand.
-- `graphify update .` runs on every vault sync to keep code graph current.
-- `Hermes/runtime/` holds live logs, caches, temp files — never committed.
-
----
+- `scripts/vault_sync_desktop.sh` runs every 15 min (cronie): pull --rebase → export sessions → sync memory → STRUCTURE.md → graphify update → commit (timestamped, skip if clean) → push.
+- Hermes memory syncs from `~/.hermes/memories` — do not hand-edit `Hermes/Memory/` on Android; edits there get overwritten by the next sync.
+- `Hermes/Sessions/` is generated — never edit by hand.
+- `graphify update .` runs on every sync to keep code graph current.
 
 ## Token & Context Optimization Rules (MANDATORY)
 
@@ -132,13 +87,9 @@ Human Request
    - Use `graphify query` for structural/architectural questions
    - Use `gbrain search/query` for factual/memory/knowledge questions
 
----
-
 ## Secrets
 
 - Never commit `.env`, `auth.json`, `*.db`, `*.jsonl`, tokens, or keys — all gitignored. `state.db` stays local in `~/.hermes/`.
-
----
 
 ## Knowledge Base Structure
 
@@ -164,8 +115,6 @@ Brain/Knowledge/
 └── references/           # External knowledge worth keeping
     └── (add as needed)
 ```
-
----
 
 ## Logging & Notes
 

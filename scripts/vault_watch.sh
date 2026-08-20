@@ -9,7 +9,7 @@ set -euo pipefail
 # Detect platform
 if [[ -d "/data/data/com.termux" ]]; then
     HOME_DIR="/data/data/com.termux/files/home"
-    VAULT="${VAULT_ROOT:-$HOME_DIR/storage/shared/scepter}"
+    VAULT="${VAULT_ROOT:-$HOME_DIR/scepter}"
     SYNC_SCRIPT="$VAULT/scripts/vault_sync.sh"
     LOG_FILE="$HOME_DIR/.vault_watch.log"
     PLATFORM="termux"

@@ -9,7 +9,7 @@ if [[ -d "/data/data/com.termux" ]]; then
     # Android/Termux
     HOME_DIR="/data/data/com.termux/files/home"
     PY="$HOME_DIR/.hermes/venv/bin/python"
-    VAULT="$HOME_DIR/storage/shared/scepter"
+    VAULT="$HOME_DIR/scepter"
 else
     # Linux/macOS/Windows (WSL)
     HOME_DIR="$HOME"

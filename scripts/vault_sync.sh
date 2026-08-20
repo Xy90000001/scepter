@@ -1,7 +1,6 @@
 #!/bin/bash
 # vault_sync.sh — Cross-platform sync for Scepter vault (Linux/macOS/Termux)
-# Lean Vault Isolation Protocol: only heromi profile + sessions sync
-# Order: pull --rebase -> export heromi sessions -> sync memory -> graphify update -> commit -> push
+# Order: pull --rebase -> export sessions -> sync memory -> graphify update -> commit -> push
 # Silent when nothing changed.
 
 set -euo pipefail
@@ -10,7 +9,7 @@ set -euo pipefail
 if [[ -d "/data/data/com.termux" ]]; then
     HOME_DIR="/data/data/com.termux/files/home"
     PY="$HOME_DIR/.hermes/venv/bin/python"
-    VAULT="$HOME_DIR/storage/shared/scepter"
+    VAULT="$HOME_DIR/scepter"
     PLATFORM="termux"
     # Keep device awake during sync
     termux-wake-lock 2>/dev/null || true
@@ -36,9 +35,9 @@ if ! git pull --rebase -q origin main 2>>"$LOG"; then
     exit 1
 fi
 
-# 1. Session export — ONLY heromi sessions
+# 1. Session export (filtered: excludes kanban/task/system/code sessions)
 if [[ -f "$VAULT/scripts/session_sync.py" ]]; then
-    "$PY" "$VAULT/scripts/session_sync.py" export --recent-days "$RECENT_DAYS" --profile heromi >> "$LOG" 2>&1 || true
+    "$PY" "$VAULT/scripts/session_sync.py" export --recent-days "$RECENT_DAYS" >> "$LOG" 2>&1 || true
 fi
 
 # 1b. Kanban tasks export (PC) / import (Termux)
@@ -52,7 +51,7 @@ if [[ -f "$VAULT/scripts/kanban_sync.py" ]]; then
     fi
 fi
 
-# 1c. Per-profile symlinks (ensure heromi on both, xosin on Termux only)
+# 1c. Per-profile symlinks (ensure heromi only on Termux, etc.)
 if [[ -f "$VAULT/scripts/setup_symlinks.sh" ]]; then
     bash "$VAULT/scripts/setup_symlinks.sh" >> "$LOG" 2>&1 || true
 fi
@@ -63,22 +62,18 @@ if [[ -d "$HOME_DIR/.hermes/memories" && -d "$VAULT/Hermes/Memory" ]]; then
           "$VAULT/Hermes/Memory/" 2>/dev/null || true
 fi
 
-# 3. Graphify update (PC ONLY — skip on Termux)
-if [[ "$PLATFORM" == "desktop" ]]; then
-    if command -v graphify >/dev/null 2>&1; then
-        graphify update . >> "$LOG" 2>&1 || true
-    fi
-
-    # 4. gbrain embed stale (PC ONLY — skip on Termux)
-    if command -v gbrain >/dev/null 2>&1; then
-        gbrain embed --stale >> "$LOG" 2>&1 || true
-    fi
-else
-    echo "[$(date)] [$PLATFORM] Skipping graphify/gbrain (PC only)" >> "$LOG"
+# 3. Graphify update (incremental knowledge graph)
+if command -v graphify >/dev/null 2>&1; then
+    graphify update . >> "$LOG" 2>&1 || true
 fi
 
-# 5. STRUCTURE.md refresh (PC only for now)
-if [[ "$PLATFORM" == "desktop" && -f "$VAULT/scripts/gen_structure.py" ]]; then
+# 4. gbrain embed stale (if available)
+if command -v gbrain >/dev/null 2>&1; then
+    gbrain embed --stale >> "$LOG" 2>&1 || true
+fi
+
+# 5. STRUCTURE.md refresh
+if [[ -f "$VAULT/scripts/gen_structure.py" ]]; then
     "$PY" "$VAULT/scripts/gen_structure.py" >> "$LOG" 2>&1 || true
 fi
 

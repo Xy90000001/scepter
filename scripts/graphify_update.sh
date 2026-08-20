@@ -1,14 +1,14 @@
 #!/bin/bash
 # graphify_update.sh — incremental graphify update for scepter vault
 # Runs before push: updates knowledge graph with changed files only
-# PC ONLY — skip on Termux (graphify not installed on Termux)
+# Cross-platform (Android/Termux + Linux/macOS/Windows)
 
 set -euo pipefail
 
 # Detect platform
 if [[ -d "/data/data/com.termux" ]]; then
-    echo "[graphify_update] Termux detected — skipping (graphify is PC only)"
-    exit 0
+    HOME_DIR="/data/data/com.termux/files/home"
+    VAULT="${VAULT_ROOT:-$HOME_DIR/scepter}"
 else
     HOME_DIR="$HOME"
     VAULT="${VAULT_ROOT:-$HOME/scepter}"
