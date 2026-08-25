@@ -2,9 +2,10 @@
 # setup_symlinks.sh — Create per-profile symlinks for cross-device Hermes
 # Lean Vault Isolation Protocol:
 # - Profile DEFINITIONS (SOUL.md, config.yaml) in vault
-# - Runtime copies to local ~/.hermes/Profiles/<name>/
 # - Runtime files (state.db, caches, sessions) stay local only
-# - xosin: copied from vault to local on Termux only
+# - heromi: SYMLINKED from vault to local on BOTH PC and Termux
+# - xosin: COPIED from vault to local on Termux only
+# - PC-only profiles: created locally, never in vault
 
 set -euo pipefail
 
@@ -26,8 +27,26 @@ mkdir -p "$HERMES_DIR/profiles"
 VAULT_PROFILES="$VAULT/Hermes/Profiles"
 LOCAL_PROFILES="$HERMES_DIR/profiles"
 
+# Function: symlink heromi profile from vault to local (full profile directory)
+symlink_heromi() {
+    local src="$VAULT_PROFILES/heromi"
+    local dst="$LOCAL_PROFILES/heromi"
+    
+    if [[ ! -d "$src" ]]; then
+        echo "  WARNING: heromi not found in vault"
+        return 1
+    fi
+    
+    # Remove existing (file, dir, or symlink)
+    rm -rf "$dst"
+    
+    # Symlink entire profile directory
+    ln -s "$src" "$dst"
+    echo "  heromi symlinked from vault"
+}
+
 # Function: copy profile definition from vault to local (SOUL.md + config.yaml only)
-sync_profile_def() {
+copy_profile_def() {
     local profile="$1"
     local src="$VAULT_PROFILES/$profile"
     local dst="$LOCAL_PROFILES/$profile"
@@ -50,14 +69,14 @@ sync_profile_def() {
 }
 
 if [[ "$PLATFORM" == "termux" ]]; then
-    # TERMUX: sync heromi + xosin definitions from vault
-    sync_profile_def "heromi"
-    sync_profile_def "xosin"
+    # TERMUX: symlink heromi + copy xosin definition from vault
+    symlink_heromi
+    copy_profile_def "xosin"
     
     echo "  PC-only profiles (xorin, ceo, engineer, product, growth, finance, ops) are LOCAL ONLY"
 else
-    # DESKTOP: sync heromi definition from vault
-    sync_profile_def "heromi"
+    # DESKTOP: symlink heromi from vault
+    symlink_heromi
     
     echo "  xosin (Termux-only) not synced on PC"
     echo "  PC-only profiles (xorin, ceo, engineer, product, growth, finance, ops) remain local"
