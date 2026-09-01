@@ -4,7 +4,7 @@
 # - Profile DEFINITIONS (SOUL.md, config.yaml) in vault
 # - Runtime files (state.db, caches, sessions) stay local only
 # - heromi: SYMLINKED from vault to local on BOTH PC and Termux
-# - skills: SYMLINKED from vault to local on BOTH PC and Termux
+# - skills: kept in vault (~/scepter/skills/), NOT symlinked
 # - PC-only profiles: created locally, never in vault
 
 set -euo pipefail
@@ -45,36 +45,18 @@ symlink_heromi() {
     echo "  heromi symlinked from vault"
 }
 
-# Function: symlink skills from vault to local
-symlink_skills() {
-    local src="$VAULT/skills"
-    local dst="$HERMES_DIR/skills"
-    
-    if [[ ! -d "$src" ]]; then
-        echo "  WARNING: skills not found in vault"
-        return 1
-    fi
-    
-    # Remove existing symlink or directory
-    rm -rf "$dst"
-    
-    # Symlink entire skills directory
-    ln -s "$src" "$dst"
-    echo "  skills symlinked from vault"
-}
-
 if [[ "$PLATFORM" == "termux" ]]; then
-    # TERMUX: symlink heromi + skills from vault
+    # TERMUX: symlink heromi from vault
     symlink_heromi
-    symlink_skills
     
     echo "  PC-only profiles (xorin, ceo, engineer, product, growth, finance, ops) are LOCAL ONLY"
+    echo "  skills/ remain in vault (not symlinked)"
 else
-    # DESKTOP: symlink heromi + skills from vault
+    # DESKTOP: symlink heromi from vault
     symlink_heromi
-    symlink_skills
     
     echo "  PC-only profiles (xorin, ceo, engineer, product, growth, finance, ops) remain local"
+    echo "  skills/ remain in vault (not symlinked)"
 fi
 
 echo "Done. Local profiles in $LOCAL_PROFILES:"
