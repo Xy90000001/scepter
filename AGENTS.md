@@ -23,102 +23,70 @@ See `Brain/Knowledge/decisions/ADR-002-three-layer-memory.md` for full details.
 | `Brain/Knowledge/` | **Frameworks, templates, decisions, references** — queried via gbrain/graphify |
 | `Hermes/` | Agent layer: `Memory/`, `Sessions/`, `SOUL.md` (reference), `Config/` |
 | `scripts/` | Sync/export tooling (portable, versioned) |
+| `skills/` | Agentic skills (symlinked to `~/.hermes/skills/`) |
 
 ## Agent Profiles (Hermes)
 
-| Profile | Role | Device |
+| Profile | Role | Device | Delegation Authority |
+|---|---|---|---|
+| `heromi` | **Main Orchestrator / Human Interface** — Primary Personal Assistant, life organizer, brainstorms & plans with human, delegates specialist tasks based on intent, reports SaaS updates to human | PC + Termux | **Delegates to ALL agents** (xorin, ceo, product, growth, finance, engineer, ops) |
+| `xorin` | **PC System Ops** — PC host-level system maintenance, tool installations, script setups, PC Hermes workspace, architecture maintenance | PC only | Receives from heromi; no further delegation |
+| `ceo` | **SaaS Executive** — Owns SaaS execution, delegates SaaS tasks to specialists | PC only | **Delegates to specialists** (product, growth, finance, engineer, ops); reports to heromi |
+| `product` | **Product Manager** — PRDs, prioritization, metrics, user stories, experiments | PC only | Receives from ceo; delegates to engineer/growth |
+| `growth` | **Growth Lead** — Acquisition, retention, funnel optimization, SEO, content, partnerships | PC only | Receives from ceo; delegates to engineer/product |
+| `finance` | **Finance Lead** — Unit economics, pricing, runway, fundraising, legal/compliance | PC only | Receives from ceo; advises heromi/xorin/ceo |
+| `engineer` | **Lead Engineer** — Architecture, implementation, code quality, technical debt, deployment | PC only | Receives from ceo; delegates to ops |
+| `ops` | **Platform Engineer** — Infrastructure, CI/CD, monitoring, security, scaling, vendor management | PC only | Receives from ceo/engineer; enables engineer |
+
+### Delegation Hierarchy
+
+```
+HUMAN (you)
+    │ verifies / approves
+    ▼
+heromi  ── Main Orchestrator / Human Interface / Life Organizer
+    │ delegates
+    ├── xorin  (PC System Ops) ──────────────────────────► reports to heromi
+    ├── ceo    (SaaS Executive) ─────────────────────────► reports to heromi
+    │       │ delegates
+    │       ├── product  (Product Manager) ──────────────► reports to ceo → heromi
+    │       ├── growth   (Growth Lead) ──────────────────► reports to ceo → heromi
+    │       ├── finance  (Finance Lead) ─────────────────► reports to ceo → heromi
+    │       ├── engineer (Lead Engineer) ────────────────► reports to ceo → heromi
+    │       └── ops      (Platform Engineer) ─────────────► reports to ceo → heromi
+```
+
+**Key Rules:**
+- `heromi` is the **single delegation hub** — all agents ultimately report to heromi
+- `xorin` handles **PC infrastructure only** — no SaaS decisions
+- `ceo` handles **SaaS execution only** — delegates to 5 specialists
+- **All agents report to heromi** → heromi verifies with human
+- Human is the final approver for strategic decisions, budget, pivots
+
+## Delegation Protocol
+
+See `Brain/Knowledge/decisions/DELEGATION_PROTOCOL.md` for full handoff format, report templates, escalation triggers, and kanban dependency tracking.
+
+## Tooling
+
+| Tool | Purpose | Access |
 |---|---|---|
-| `xorin` | CEO Orchestrator | PC |
-| `heromi` | Mobile Node | Termux |
-| `ceo` | Chief Executive | PC |
-| `engineer` | Lead Engineer | PC |
-| `product` | Product Manager | PC |
-| `growth` | Growth Lead | PC |
-| `finance` | Finance Lead | PC |
-| `ops` | Platform Engineer | PC |
+| `gbrain` | Memory, knowledge, semantic search, code graph | MCP (all agents) |
+| `graphify` | Code structure, AST relationships, file dependencies | CLI skill (all agents) |
+| `Mnemosyne` | Personal facts, preferences, session continuity | Internal (all agents) |
+| `kanban` | Task board with assignee, status, dependencies | `01_Tasks/kanban_tasks.json` |
+| Coding agents | `claude-code`, `codex`, `opencode`, `aider` | `engineer` profile |
 
-Each profile has a `SOUL.md` defining its role, tools, and delegation authority. See `Brain/Knowledge/decisions/ADR-003-profile-agents.md`.
+## Cross-Device Sync
 
-## Task Rules
+- **Vault** (`~/scepter/`) — Git synced to GitHub (private repo)
+- **PC** — Full profiles, gbrain, graphify, cron sync (15 min)
+- **Termux** — `heromi` profile only, vault sync, no gbrain/graphify
+- **Sync script** — `scripts/vault_sync.sh` (cron on both devices)
 
-- **Kanban workflow:** Backlog → Discovery → Validating → Spec'ing → Building → Launching → Growing → Done
-- **Only orchestrators (`xorin`, `ceo`) create tasks for specialists** — they own the pipeline
-- **Specialists are leaf agents** — they execute, don't delegate further
-- **Every task must include:** goal, context (linked docs, decisions), success criteria, assignee (profile name)
-- **Done requires verification** — orchestrator checks output before closing
-- In `01_Tasks/kanban.md` (Obsidian mirror): `- [ ]` = todo, `- [ ] #next` = next up, `- [x]` = done
+## Guardrails
 
-## Sync Behavior
-
-- `scripts/vault_sync.sh` runs every 15 min (cronie): pull --rebase → export heromi sessions → sync memory → STRUCTURE.md → graphify update (PC only) → gbrain embed (PC only) → commit (timestamped, skip if clean) → push.
-- Hermes memory syncs from `~/.hermes/memories` — do not hand-edit `Hermes/Memory/` on Android; edits there get overwritten by the next sync.
-- `Hermes/Sessions/` is generated — never edit by hand.
-- `graphify update .` and `gbrain embed` run on every sync **on PC only**; Termux skips these.
-
-## Token & Context Optimization Rules (MANDATORY)
-
-1. **NEVER use text-scanning commands** (like `grep`, `cat`, or `find`) to search across directories if a Knowledge Graph tool is available.
-
-2. **For codebase, architecture, or technical dependency queries** → ALWAYS query `graphify` first:
-   ```bash
-   graphify query "how does X work"
-   graphify path "ModuleA" "ModuleB"
-   graphify explain "Concept"
-   ```
-
-3. **For personal memories, past sessions, timelines, or note cross-references** → ALWAYS query `gbrain` first:
-   ```bash
-   gbrain search "query"
-   gbrain query "question"
-   gbrain ask "question"
-   ```
-
-4. **For frameworks, templates, decisions, references** → ALWAYS query `gbrain` in `Brain/Knowledge/`:
-   ```bash
-   gbrain search "market analysis framework"
-   gbrain search "PRD template"
-   ```
-
-5. **You are strictly token-budgeted**. Only load raw file contents into the context window if the graph query points to it as an explicit, high-confidence match.
-
-6. **Default workflow**:
-   - Graph query → identify relevant files → read only those files
-   - Never `grep -r` or `cat` entire directories
-   - Use `graphify query` for structural/architectural questions
-   - Use `gbrain search/query` for factual/memory/knowledge questions
-
-## Secrets
-
-- Never commit `.env`, `auth.json`, `*.db`, `*.jsonl`, tokens, or keys — all gitignored. `state.db` stays local in `~/.hermes/`.
-
-## Knowledge Base Structure
-
-```
-Brain/Knowledge/
-├── frameworks/           # Reusable decision frameworks
-│   ├── market-analysis.md
-│   ├── mvp-scoping.md
-│   ├── tech-selection.md
-│   └── prioritization.md
-├── templates/            # Structured templates agents fill in
-│   ├── prd.md
-│   ├── experiment.md
-│   ├── architecture-decision.md
-│   └── launch-checklist.md
-├── decisions/            # Immutable ADRs (Architecture Decision Records)
-│   ├── README.md         # Index
-│   ├── ADR-001-scepter-vault-backbone.md
-│   ├── ADR-002-three-layer-memory.md
-│   ├── ADR-003-profile-agents.md
-│   ├── ADR-004-kanban-routing.md
-│   └── ADR-005-knowledge-queries.md
-└── references/           # External knowledge worth keeping
-    └── (add as needed)
-```
-
-## Logging & Notes
-
-- Date-stamp log entries: `2026-08-08`.
-- Daily notes go in `Brain/Journal/` as `YYYY-MM-DD.md`.
-- Prefer `[[wikilinks]]` over raw paths.
-- Important decisions from sessions → new ADR in `Brain/Knowledge/decisions/`.
+- **PC-only profiles:** `xorin`, `ceo`, `product`, `growth`, `finance`, `engineer`, `ops` (never on Termux)
+- **Cross-platform:** `heromi` only
+- **Environment guards** in `scripts/setup_symlinks.sh` enforce device-specific profiles
+- **No cron/projects** until product is decided

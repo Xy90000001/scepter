@@ -4,7 +4,7 @@
 # - Profile DEFINITIONS (SOUL.md, config.yaml) in vault
 # - Runtime files (state.db, caches, sessions) stay local only
 # - heromi: SYMLINKED from vault to local on BOTH PC and Termux
-# - xosin: COPIED from vault to local on Termux only
+# - skills: SYMLINKED from vault to local on BOTH PC and Termux
 # - PC-only profiles: created locally, never in vault
 
 set -euo pipefail
@@ -45,40 +45,35 @@ symlink_heromi() {
     echo "  heromi symlinked from vault"
 }
 
-# Function: copy profile definition from vault to local (SOUL.md + config.yaml only)
-copy_profile_def() {
-    local profile="$1"
-    local src="$VAULT_PROFILES/$profile"
-    local dst="$LOCAL_PROFILES/$profile"
+# Function: symlink skills from vault to local
+symlink_skills() {
+    local src="$VAULT/skills"
+    local dst="$HERMES_DIR/skills"
     
     if [[ ! -d "$src" ]]; then
-        echo "  WARNING: $profile not found in vault"
+        echo "  WARNING: skills not found in vault"
         return 1
     fi
     
-    mkdir -p "$dst"
+    # Remove existing symlink or directory
+    rm -rf "$dst"
     
-    # Copy only definition files (not runtime)
-    for f in SOUL.md config.yaml; do
-        if [[ -f "$src/$f" ]]; then
-            cp "$src/$f" "$dst/$f"
-        fi
-    done
-    
-    echo "  $profile definition synced from vault"
+    # Symlink entire skills directory
+    ln -s "$src" "$dst"
+    echo "  skills symlinked from vault"
 }
 
 if [[ "$PLATFORM" == "termux" ]]; then
-    # TERMUX: symlink heromi + copy xosin definition from vault
+    # TERMUX: symlink heromi + skills from vault
     symlink_heromi
-    copy_profile_def "xosin"
+    symlink_skills
     
     echo "  PC-only profiles (xorin, ceo, engineer, product, growth, finance, ops) are LOCAL ONLY"
 else
-    # DESKTOP: symlink heromi from vault
+    # DESKTOP: symlink heromi + skills from vault
     symlink_heromi
+    symlink_skills
     
-    echo "  xosin (Termux-only) not synced on PC"
     echo "  PC-only profiles (xorin, ceo, engineer, product, growth, finance, ops) remain local"
 fi
 

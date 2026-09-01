@@ -1,5 +1,3 @@
-User wants a brief list of planned actions before the agent does anything ("always make a brief list of what you're about to do").
-§
 User's second brain "scepter": Obsidian vault + private GitHub backup. Memory architecture: symlink on PC (~/.hermes/memories → vault), sync-copy on Android (FUSE lacks flock — symlink breaks the memory tool). Mobile access + same Hermes setup on PC planned.
 §
 User prefers to apply changes himself when given the requirements — when he asks for specs/dependency lists, provide clean self-contained info so he can do the change.
@@ -10,6 +8,4 @@ User is building a "second brain" (Obsidian vault "scepter") synced across Andro
 §
 User prefers: brief action list before execution; file-change-based sync (inotifywait) over timed cron; applying changes themselves when given clean specs; interrupting mid-task to take over.
 §
-User wants brief action list before any multi-step execution ("always make a brief list of what you're about to do")
-§
-User prefers to apply changes himself when given clean self-contained specs/requirements
+User requires explicit approval: always present a brief execution plan/list of steps before any modifications or multi-step actions. Stop promptly on 'wait'/'stop' with status summary. Prefers to apply changes themselves when given clean specs.

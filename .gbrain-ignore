@@ -1,0 +1,75 @@
+# gbrain ignore patterns
+# These paths are excluded from gbrain sync/import
+
+# Hermes runtime (local only, not synced)
+Hermes/runtime/
+Hermes/Profiles/*/cache/
+Hermes/Profiles/*/*.lock
+Hermes/Profiles/*/models_dev_cache.json
+Hermes/Profiles/*/ollama_cloud_models_cache.json
+Hermes/Profiles/*/provider_models_cache.json
+Hermes/Profiles/*/.skills_prompt_snapshot.json
+Hermes/Profiles/*/.update_check
+Hermes/Profiles/*/skills/.bundled_manifest
+Hermes/Profiles/*/skills/.curator_state
+Hermes/Profiles/*/skills/.termux_bundled_sync_stamp
+Hermes/Profiles/*/.hermes_history
+Hermes/Profiles/*/audio_cache/
+Hermes/Profiles/*/bin/
+Hermes/Profiles/*/context_length_cache.yaml
+Hermes/Profiles/*/auth.lock
+Hermes/Profiles/*/gateway.lock
+Hermes/Profiles/*/gateway.pid
+Hermes/Profiles/*/gateway-starts.log
+Hermes/Profiles/*/gateway_state.json
+
+# Scripts (source code, not knowledge)
+scripts/
+
+# graphify output (generated, not source)
+graphify-out/
+graphify-out/
+
+# Build artifacts
+*.log
+*.pid
+*.out
+*.tmp
+.cache/
+.vault_sync.log
+.vault_watch.log
+nohup.out
+
+# Obsidian device-local state
+.obsidian/workspace*.json
+.obsidian/cache/
+.obsidian/plugins/obsidian-git/data.json
+
+# Secrets
+*.env
+.env*
+auth.json
+*.token
+*.pem
+*id_rsa*
+*id_ed25519*
+
+# Raw session DBs / dumps
+*.db
+*.db-*
+*.sqlite*
+*.jsonl
+*.jsonl.gz
+
+# Termux/Android noise
+.nomedia
+
+# Lock files
+*.lock
+
+# Kanban local state
+kanban.db
+kanban.db-*
+
+# Node modules
+node_modules/
