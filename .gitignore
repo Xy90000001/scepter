@@ -11,7 +11,7 @@ nohup.out
 .cache/
 .vault_sync.log
 .vault_watch.log
-graphify-out/
+graphify-out
 
 # ── Node / JS tooling ─────────────────────────────────────
 node_modules/
